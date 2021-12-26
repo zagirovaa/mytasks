@@ -43,10 +43,14 @@
                 <a class="navbar-item" id="help-button">About</a>
             </div>
             <div class="navbar-end">
+                <!-- First page -->
                 <a class="navbar-item">&#171;</a>
+                <!-- Previous page -->
                 <a class="navbar-item">&#8249;</a>
                 <span class="tag has-text-white has-background-info is-medium m-3">0 of 0</span>
+                <!-- Next page -->
                 <a class="navbar-item">&#8250;</a>
+                <!-- Last page -->
                 <a class="navbar-item">&#187;</a>
             </div>
         </div>
@@ -56,10 +60,13 @@
             <nav id="groups-panel" class="panel is-shadowless">
                 <p class="panel-heading is-radiusless">
                     Groups
-                    <span class="tag is-dark is-pulled-right">0</span>
+                    <span class="tag is-dark is-pulled-right">{{ groups.length }}</span>
                 </p>
                 {% for group in groups %}
-                <a class="panel-block has-background-info has-text-white">{{ group.name }}</a>
+                <a class="panel-block 
+                {% if loop.index == active_group %}
+                 has-background-info has-text-white 
+                {% endif %}">{{ group.name }}</a>
                 {% endfor %}
             </nav>
         </div>

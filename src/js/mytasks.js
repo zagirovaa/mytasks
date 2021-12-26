@@ -1,4 +1,4 @@
-export class Group {
+export default class Group {
 
     #uuid; #name; #tasks
     constructor(name) {
