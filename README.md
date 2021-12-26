@@ -1,2 +1,2 @@
 # mytasks
-Simple TODO application written in JS
+Simple TODO application
