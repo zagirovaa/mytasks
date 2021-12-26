@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // About modal dialog close button event listener
 const helpDeleteButton = document.getElementById('help-modal-delete');
 helpDeleteButton.addEventListener('click', () => {
-    Subroutines.showModal();
+    Subroutines.showAbout();
 });
 
 // Main menu items event listeners
