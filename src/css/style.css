@@ -1,0 +1,8 @@
+html {
+    overflow: hidden;
+}
+
+.card {
+    background-color: transparent;
+    width: 100%;
+}
