@@ -78,8 +78,8 @@ export function clearTasks() {
 
 export function showAbout() {
 
-    const helpModal = document.getElementById('help-modal');
-    helpModal.classList.toggle('is-active');
+    const aboutModal = document.getElementById('about-modal');
+    aboutModal.classList.toggle('is-active');
     
 }
 

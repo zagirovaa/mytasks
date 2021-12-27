@@ -3,6 +3,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
@@ -43,18 +44,14 @@
                         <a class="navbar-item">Clear all tasks</a>
                     </div>
                 </div>
-                <a class="navbar-item" id="help-button">About</a>
+                <a class="navbar-item has-tooltip-bottom" data-tooltip="About the application" id="about-button">About</a>
             </div>
             <div class="navbar-end">
-                <!-- First page -->
-                <a class="navbar-item">&#171;</a>
-                <!-- Previous page -->
-                <a class="navbar-item">&#8249;</a>
+                <a class="navbar-item has-tooltip-bottom has-tooltip-top-mobile" data-tooltip="First page">&#171;</a>
+                <a class="navbar-item has-tooltip-bottom has-tooltip-top-mobile" data-tooltip="Previous page">&#8249;</a>
                 <span class="tag has-text-white has-background-info is-medium m-3">0 of 0</span>
-                <!-- Next page -->
-                <a class="navbar-item">&#8250;</a>
-                <!-- Last page -->
-                <a class="navbar-item">&#187;</a>
+                <a class="navbar-item has-tooltip-bottom has-tooltip-top-mobile" data-tooltip="Next page">&#8250;</a>
+                <a class="navbar-item has-tooltip-bottom has-tooltip-top-mobile" data-tooltip="Last page">&#187;</a>
             </div>
         </div>
     </nav>
@@ -99,6 +96,9 @@
             </nav>
         </div>
     </div>
+    
+    {% include '/templates/group.html' %}
+    {% include '/templates/task.html' %}
     {% include '/templates/about.html' %}
     
     <script src="js/nunjucks.min.js"></script>

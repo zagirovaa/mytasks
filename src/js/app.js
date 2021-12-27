@@ -26,7 +26,7 @@ let data = {
 
 // Main page rendering
 const mainPage = document.getElementById('html');
-mainPage.innerHTML = nunjucks.render('../templates/base.html', data);
+mainPage.innerHTML = nunjucks.render('../templates/main.html', data);
 
 // Hamburger menu toggle event listener
 document.addEventListener('DOMContentLoaded', () => {
@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // About modal dialog close button event listener
-const helpDeleteButton = document.getElementById('help-modal-delete');
-helpDeleteButton.addEventListener('click', () => {
+const aboutDeleteButton = document.getElementById('about-modal-delete');
+aboutDeleteButton.addEventListener('click', () => {
     Subroutines.showAbout();
 });
 
