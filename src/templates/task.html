@@ -2,10 +2,10 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Task</p>
+            <p class="modal-card-title">{{ modal.operation }} task</p>
             <button class="delete" aria-label="close" id='task-modal-delete'></button>
         </header>
-        <section class="modal-card-body has-text-centered">
+        <section class="modal-card-body">
             <div class="field">
                 <label class="label">Title</label>
                 <div class="control">
@@ -19,5 +19,9 @@
                 </div>
             </div>
         </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Apply</button>
+            <button class="button">Cancel</button>
+        </footer>
     </div>
 </div>

@@ -2,16 +2,20 @@
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Group</p>
+            <p class="modal-card-title">{{ modal.operation }} group</p>
             <button class="delete" aria-label="close" id='group-modal-delete'></button>
         </header>
-        <section class="modal-card-body has-text-centered">
+        <section class="modal-card-body">
             <div class="field">
-                <label class="label">Name:</label>
+                <label class="label">Name</label>
                 <div class="control">
                     <input class="input" type="text" placeholder="Enter group name">
                 </div>
             </div>
         </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success">Apply</button>
+            <button class="button">Cancel</button>
+        </footer>
     </div>
 </div>

@@ -8,8 +8,15 @@
         <section class="modal-card-body has-text-centered">
             <h3 class="title is-3">{{ app.title }}</h3>
             <h5 class="subtitle is-5">Version {{ app.version }}</h5>
-            <h6 class="subtitle is-6">Created using: HTML - CSS - JS - BULMA - NUNJUCKS</h6>
-            <h6 class="subtitle is-6">{{ app.developer }}</h6>
+            <h6 class="subtitle is-6">
+                - Created using -<br>
+                HTML ✦ CSS ✦ JAVASCRIPT ✦ BULMA ✦ NUNJUCKS
+            </h6>
+            <h6 class="subtitle is-6">
+                - Developer -<br>
+                {{ app.developer }}
+            </h6>
         </section>
+        <footer class="modal-card-foot"></footer>
     </div>
 </div>

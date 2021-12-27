@@ -2,7 +2,7 @@ import * as Subroutines from './subroutines.js';
 
 export const myStorage = window.localStorage;
 export const myGroups = [];
-export let currentGroupId = 0;
+export let currentGroupId = 1;
 export let currentTaskId = 0;
 
 // Load all the data from localStorage
