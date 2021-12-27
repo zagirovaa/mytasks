@@ -1,32 +1,7 @@
 import * as Subroutines from './subroutines.js';
 
-export const myStorage = window.localStorage;
-export const myGroups = [];
-export let currentGroupId = 1;
-export let currentTaskId = 0;
-
-// Load all the data from localStorage
-if (myStorage.length) {
-    for (let group = 0; group < myStorage.length; group++) {
-        myGroups.push(JSON.parse(myStorage.getItem(myStorage.key(group))));
-    };
-};
-
-// Initializing context data
-let data = {
-    'app': {
-        'title': 'MyTasks',
-        'version': '0.3.5',
-        'developer': 'Zagirov Abdul Askerovich'
-    },
-    'groups': myGroups,
-    'active_group': currentGroupId,
-    'active_task': currentTaskId
-};
-
-// Main page rendering
-const mainPage = document.getElementById('html');
-mainPage.innerHTML = nunjucks.render('../templates/main.html', data);
+Subroutines.getData();
+Subroutines.renderPage();
 
 // Hamburger menu toggle event listener
 document.addEventListener('DOMContentLoaded', () => {

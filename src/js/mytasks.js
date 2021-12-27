@@ -1,6 +1,6 @@
 export default class Group {
 
-    #uuid; #name; #tasks
+    #uuid; #name; #tasks;
     constructor(name) {
         this.#uuid = crypto.randomUUID();
         this.#name = name;

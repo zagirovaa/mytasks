@@ -64,7 +64,7 @@
                 </p>
                 {% for group in groups %}
                 <a class="panel-block 
-                {% if loop.index == active_group %}
+                {% if group.uuid == active_ids.currentGroupId %}
                  has-background-info has-text-white 
                 {% endif %}">{{ group.name }}</a>
                 {% endfor %}
