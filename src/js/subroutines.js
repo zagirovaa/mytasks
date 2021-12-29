@@ -37,8 +37,30 @@ export function renderPage() {
     };
 
     // Main page rendering
-    const mainPage = document.getElementById('html');
+    const mainPage = document.querySelector('body');
     mainPage.innerHTML = nunjucks.render('../templates/main.html', data);
+
+}
+
+
+export function makeGroupActive(uuid) {
+
+    const currentGroupId = currentIDs.currentGroupId;
+    const groupItems = Array.from(document.querySelectorAll('a.group'));
+    currentIDs.currentGroupId = uuid;
+    myStorage.setItem('currentIDs', JSON.stringify(currentIDs));
+    if (groupItems.length) {
+        groupItems.forEach(el => {
+            let selectedUUID = el.getAttribute('uuid');
+            if (selectedUUID == uuid) {
+                el.classList.add('has-background-info')
+                el.classList.add('has-text-white');
+            } else if (selectedUUID == currentGroupId) {
+                el.classList.remove('has-background-info')
+                el.classList.remove('has-text-white');
+            };
+        });
+    };
 
 }
 

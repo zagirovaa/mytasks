@@ -3,7 +3,7 @@ import * as Subroutines from './subroutines.js';
 Subroutines.getData();
 Subroutines.renderPage();
 
-// Hamburger menu toggle event listener
+// Hamburger menu event listener
 document.addEventListener('DOMContentLoaded', () => {
     const navbarBurgers = Array.from(document.querySelectorAll('.navbar-burger'));
     if (navbarBurgers.length > 0) {
@@ -75,4 +75,15 @@ if (menuItems.length) {
                 break;
         };
     });
-}
+};
+
+// Groups list items event listeners
+const groupItems = Array.from(document.querySelectorAll('a.group'));
+if (groupItems.length) {
+    groupItems.forEach(el => {
+        let uuid = el.getAttribute('uuid');
+        el.addEventListener('click', () => {
+            Subroutines.makeGroupActive(uuid);
+        });
+    })
+};
