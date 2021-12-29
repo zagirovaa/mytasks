@@ -1,15 +1,15 @@
 import Group from './mytasks.js';
 
+const GROUPS_ITEM_NAME = 'GroupsItems';
+const IDS_ITEM_NAME = 'IdsItems';
+
 const myStorage = window.localStorage;
-const myGroups = [];
-const currentIDs = {
-    'currentGroupId': '',
-    'currentTaskId': ''
-};
+let myGroups = [];
+let currentIDs = {};
 
 getData();
 renderPage();
-setHamburgetMenuEventListener();
+setHamburgerMenuEventListener();
 setMenuItemsEventListeners();
 setAboutModalCloseEventListener();
 setGroupItemsEventListeners();
@@ -18,14 +18,9 @@ setGroupItemsEventListeners();
 function getData() {
 
     if (myStorage.length) {
-        for (let group = 0; group < myStorage.length; group++) {
-            if (myStorage.key(group) != 'currentIDs') {
-                myGroups.push(JSON.parse(myStorage.getItem(myStorage.key(group))));
-            };
-        };
-        let ids = JSON.parse(myStorage.getItem('currentIDs'));
-        currentIDs.currentGroupId = ids.currentGroupId;
-        currentIDs.currentTaskId = ids.currentTaskId;
+        myGroups = JSON.parse(myStorage.getItem(GROUPS_ITEM_NAME));
+        currentIDs.currentGroupId = JSON.parse(myStorage.getItem(IDS_ITEM_NAME)).currentGroupId;
+        currentIDs.currentTaskId = JSON.parse(myStorage.getItem(IDS_ITEM_NAME)).currentTaskId;
     };
 
 }
@@ -42,15 +37,13 @@ function renderPage() {
         'groups': myGroups,
         'active_ids': currentIDs
     };
-
-    // Main page rendering
     const mainPage = document.querySelector('body');
     mainPage.innerHTML = nunjucks.render('../templates/main.html', data);
 
 }
 
 
-function setHamburgetMenuEventListener() {
+function setHamburgerMenuEventListener() {
 
     document.addEventListener('DOMContentLoaded', () => {
         const navbarBurgers = Array.from(document.querySelectorAll('.navbar-burger'));
@@ -103,19 +96,15 @@ function setMenuItemsEventListeners() {
                 case 'About':
                     el.addEventListener('click', showAbout);
                     break;
-                // First page
                 case '&#171;':
                     el.addEventListener('click', moveToFirstPage);
                     break;
-                // Previous page
                 case '&#8249;':
                     el.addEventListener('click', moveToPreviousPage);
                     break;
-                // Next page
                 case '&#8250;':
                     el.addEventListener('click', moveToNextPage);
                     break;
-                // Last page
                 case '&#187;':
                     el.addEventListener('click', moveToLastPage);
                     break;
@@ -151,19 +140,33 @@ function setAboutModalCloseEventListener() {
 }
 
 
+function saveGroupsToStorage() {
+
+    myStorage.setItem(GROUPS_ITEM_NAME, JSON.stringify(myGroups));
+
+}
+
+
+function saveIdsToStorage() {
+
+    myStorage.setItem(IDS_ITEM_NAME, JSON.stringify(currentIDs));
+
+}
+
+
 function makeGroupActive(uuid = currentIDs.currentGroupId) {
 
     const currentGroupId = currentIDs.currentGroupId;
     const groupItems = Array.from(document.querySelectorAll('a.group'));
     currentIDs.currentGroupId = uuid;
-    myStorage.setItem('currentIDs', JSON.stringify(currentIDs));
+    saveIdsToStorage();
     if (groupItems.length) {
         groupItems.forEach(el => {
-            let selectedUUID = el.getAttribute('uuid');
-            if (selectedUUID == uuid) {
+            let selectedID = el.getAttribute('uuid');
+            if (selectedID == uuid) {
                 el.classList.add('has-background-info')
                 el.classList.add('has-text-white');
-            } else if (selectedUUID == currentGroupId) {
+            } else if (selectedID == currentGroupId) {
                 el.classList.remove('has-background-info')
                 el.classList.remove('has-text-white');
             };
@@ -187,11 +190,11 @@ function addGroup() {
             };
         };
         let newGroup = new Group(groupName);
-        myStorage.setItem(newGroup.uuid, JSON.stringify(newGroup));
         myGroups.push(newGroup);
+        saveGroupsToStorage();
         if (myGroups.length == 1) {
             currentIDs.currentGroupId = newGroup.uuid;
-            myStorage.setItem('currentIDs', JSON.stringify(currentIDs));
+            saveIdsToStorage();
         };
         const groupsPanel = document.getElementById('groups-panel');
         const addedGroup = `
@@ -223,8 +226,9 @@ function deleteGroup() {
 function clearGroups() {
 
     myStorage.clear();
-    myGroups.length = 0;
-    document.location.reload();
+    myGroups = [];
+    currentIDs = {};
+    renderPage();
 
 }
 
