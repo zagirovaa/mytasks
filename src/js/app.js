@@ -214,7 +214,8 @@ function editGroup() {
 function deleteGroup() {
 
     for (let group = 0; group < myGroups.length; group++) {
-        if (myGroups[group].uuid == currentIDs.currentGroupId) {
+        let uuidToRemove = myGroups[group].uuid;
+        if (currentIDs.currentGroupId == uuidToRemove) {
             if (myGroups.length > 1) {
                 if (myGroups[group - 1]) {
                     makeGroupActive(myGroups[group - 1].uuid);
@@ -223,8 +224,9 @@ function deleteGroup() {
                 };
             };
             myGroups.splice(group, 1);
+            let groupToRemove = document.querySelector('[uuid="' + uuidToRemove + '"]');
+            groupToRemove.parentNode.removeChild(groupToRemove);
             saveGroupsToStorage();
-            renderPage();
             return;
         };
     };
