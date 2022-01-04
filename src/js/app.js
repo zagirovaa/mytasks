@@ -7,28 +7,13 @@ const myStorage = window.localStorage;
 let myGroups = [];
 let currentIDs = {};
 
-getData();
 renderPage();
-setHamburgerMenuEventListener();
-setMenuItemsEventListeners();
-setAboutModalCloseEventListener();
-setGroupItemsEventListeners();
-
-
-function getData() {
-
-    if (myStorage.length) {
-        myGroups = JSON.parse(myStorage.getItem(GROUPS_ITEM_NAME));
-        currentIDs.currentGroupId = JSON.parse(myStorage.getItem(IDS_ITEM_NAME)).currentGroupId;
-        currentIDs.currentTaskId = JSON.parse(myStorage.getItem(IDS_ITEM_NAME)).currentTaskId;
-    };
-
-}
 
 
 function renderPage() {
 
-    let data = {
+    getData();
+    const data = {
         'app': {
             'title': 'MyTasks',
             'version': '0.3.5',
@@ -39,6 +24,22 @@ function renderPage() {
     };
     const mainPage = document.querySelector('body');
     mainPage.innerHTML = nunjucks.render('../templates/main.html', data);
+    setHamburgerMenuEventListener();
+    setMenuItemsEventListeners();
+    setAboutModalCloseEventListener();
+    setGroupItemsEventListeners();
+
+}
+
+
+function getData() {
+
+    if (myStorage.length) {
+        myGroups = JSON.parse(myStorage.getItem(GROUPS_ITEM_NAME));
+        const currentIDsItem = JSON.parse(myStorage.getItem(IDS_ITEM_NAME));
+        currentIDs.currentGroupId = currentIDsItem.currentGroupId;
+        currentIDs.currentTaskId = currentIDsItem.currentTaskId;
+    };
 
 }
 
@@ -113,7 +114,17 @@ function setMenuItemsEventListeners() {
     };
 
 }
- 
+
+
+function setAboutModalCloseEventListener() {
+
+    const aboutDeleteButton = document.getElementById('about-modal-delete');
+    aboutDeleteButton.addEventListener('click', () => {
+        showAbout();
+    });
+
+}
+
 
 function setGroupItemsEventListeners() {
 
@@ -128,17 +139,7 @@ function setGroupItemsEventListeners() {
     };
 
 }
-
-
-function setAboutModalCloseEventListener() {
-
-    const aboutDeleteButton = document.getElementById('about-modal-delete');
-    aboutDeleteButton.addEventListener('click', () => {
-        showAbout();
-    });
-
-}
-
+ 
 
 function saveGroupsToStorage() {
 
@@ -171,7 +172,6 @@ function makeGroupActive(uuid = currentIDs.currentGroupId) {
                 el.classList.remove('has-text-white');
             };
         });
-        setGroupItemsEventListeners()
     };
 
 }
@@ -196,12 +196,7 @@ function addGroup() {
             currentIDs.currentGroupId = newGroup.uuid;
             saveIdsToStorage();
         };
-        const groupsPanel = document.getElementById('groups-panel');
-        const addedGroup = `
-            <a uuid="${newGroup.uuid}" class="group panel-block">${newGroup.name}</a>
-        `;
-        groupsPanel.innerHTML += addedGroup;
-        makeGroupActive();
+        renderPage();
     } else {
         window.alert('You did not enter group name.');
     };
@@ -218,7 +213,21 @@ function editGroup() {
 
 function deleteGroup() {
 
-    
+    for (let group = 0; group < myGroups.length; group++) {
+        if (myGroups[group].uuid == currentIDs.currentGroupId) {
+            if (myGroups.length > 1) {
+                if (myGroups[group - 1]) {
+                    makeGroupActive(myGroups[group - 1].uuid);
+                } else {
+                    makeGroupActive(myGroups[group + 1].uuid);
+                };
+            };
+            myGroups.splice(group, 1);
+            saveGroupsToStorage();
+            renderPage();
+            return;
+        };
+    };
 
 }
 
