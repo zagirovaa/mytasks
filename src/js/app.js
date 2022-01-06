@@ -1,7 +1,8 @@
 import Group from './Group.js';
-import About from './About.js';
+import AboutModal from '../components/AboutModal.js';
+import GroupModal from '../components/GroupModal.js';
 
-let myTasks = {};
+let myTasks = [];
 
 const aboutModalContext = {
     'title': 'About',
@@ -10,27 +11,81 @@ const aboutModalContext = {
     'developer': 'Zagirov Abdul Askerovich'
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+getData();
 
-    getData();
-    const navbarBurgers = Array.from(document.querySelectorAll('.navbar-burger'));
-    if (navbarBurgers.length > 0) {
-        navbarBurgers.forEach(el => {
-            el.addEventListener('click', () => {
-                const target = el.dataset.target;
-                const newTarget = document.getElementById(target);
-                el.classList.toggle('is-active');
-                newTarget.classList.toggle('is-active');
-            });
-        });
-    };
+document.addEventListener('DOMContentLoaded', () => {
     setMenuItemsEventListeners();
+    const navbarBurger = document.querySelector('.navbar-burger');
+    navbarBurger.addEventListener('click', () => {
+        const target = document.getElementById(navbarBurger.dataset.target);
+        navbarBurger.classList.toggle('is-active');
+        target.classList.toggle('is-active');
+    });
 });
+
+
+function setMenuItemsEventListeners() {
+
+    const menuItems = Array.from(document.querySelectorAll('a.navbar-item'));
+    menuItems.forEach(el => {
+        const menuText = el.textContent;
+        switch (menuText) {
+            case 'Add new group':
+                el.addEventListener('click', addGroup);
+                break;
+            case 'Edit current group':
+                el.addEventListener('click', editGroup);
+                break;
+            case 'Delete current group':
+                el.addEventListener('click', deleteGroup);
+                break;
+            case 'Clear all groups':
+                el.addEventListener('click', clearGroups);
+                break;
+            case 'Add new task':
+                el.addEventListener('click', addTask);
+                break;
+            case 'Edit current task':
+                el.addEventListener('click', editTask);
+                break;
+            case 'Delete current task':
+                el.addEventListener('click', deleteTask);
+                break;
+            case 'Clear all tasks':
+                el.addEventListener('click', clearTasks);
+                break;
+            case 'About':
+                el.addEventListener('click', showAbout);
+                break;
+            case '&#171;':
+                el.addEventListener('click', moveToFirstPage);
+                break;
+            case '&#8249;':
+                el.addEventListener('click', moveToPreviousPage);
+                break;
+            case '&#8250;':
+                el.addEventListener('click', moveToNextPage);
+                break;
+            case '&#187;':
+                el.addEventListener('click', moveToLastPage);
+                break;
+        };
+    });
+
+}
+
+
+function showAbout() {
+
+    const aboutModal = new AboutModal(aboutModalContext);
+    aboutModal.show();
+    
+}
 
 
 function getData() {
 
-    myTasks = JSON.parse(localStorage.getItem('MyTasks')) || {};
+    myTasks = JSON.parse(localStorage.getItem('MyTasks')) || [];
 
 }
 
@@ -38,67 +93,6 @@ function getData() {
 function saveData() {
 
     localStorage.setItem('MyTasks', JSON.stringify(myTasks));
-
-}
-
-
-function showAbout() {
-
-    const aboutModal = new About(aboutModalContext);
-    aboutModal.show();
-    
-}
-
-
-function setMenuItemsEventListeners() {
-
-    const menuItems = Array.from(document.querySelectorAll('a.navbar-item'));
-    if (menuItems.length) {
-        menuItems.forEach(el => {
-            const menuText = el.textContent;
-            switch (menuText) {
-                case 'Add new group':
-                    el.addEventListener('click', addGroup);
-                    break;
-                case 'Edit current group':
-                    el.addEventListener('click', editGroup);
-                    break;
-                case 'Delete current group':
-                    el.addEventListener('click', deleteGroup);
-                    break;
-                case 'Clear all groups':
-                    el.addEventListener('click', clearGroups);
-                    break;
-                case 'Add new task':
-                    el.addEventListener('click', addTask);
-                    break;
-                case 'Edit current task':
-                    el.addEventListener('click', editTask);
-                    break;
-                case 'Delete current task':
-                    el.addEventListener('click', deleteTask);
-                    break;
-                case 'Clear all tasks':
-                    el.addEventListener('click', clearTasks);
-                    break;
-                case 'About':
-                    el.addEventListener('click', showAbout);
-                    break;
-                case '&#171;':
-                    el.addEventListener('click', moveToFirstPage);
-                    break;
-                case '&#8249;':
-                    el.addEventListener('click', moveToPreviousPage);
-                    break;
-                case '&#8250;':
-                    el.addEventListener('click', moveToNextPage);
-                    break;
-                case '&#187;':
-                    el.addEventListener('click', moveToLastPage);
-                    break;
-            };
-        });
-    };
 
 }
 
@@ -141,6 +135,9 @@ function makeGroupActive(uuid = currentIDs.currentGroupId) {
 
 
 function addGroup() {
+
+    const groupModal = new GroupModal('Add group');
+    groupModal.show();
 
     // const groupName = window.prompt('Add new group name:', 'defaultName');
     // if (groupName.trim()) {

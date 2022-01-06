@@ -8,7 +8,7 @@ export default class {
         this.#uuid = crypto.randomUUID();
         this.#name = name;
         this.#tasks = [];
-        this.#active = '';
+        this.#active = false;
     };
     get uuid() {
         return this.#uuid;
@@ -22,12 +22,12 @@ export default class {
     get active() {
         return this.#active;
     };
-    set active(uuid) {
-        this.#active = uuid;
+    set active(condition) {
+        this.#active = condition;
     };
     getTask(uuid) {
         for (let task in this.#tasks) {
-            if (task.uuid == uuid) {
+            if (task.uuid === uuid) {
                 return task;
             };
         };
@@ -58,7 +58,8 @@ export default class {
         return {
             'uuid': this.#uuid,
             'name': this.#name,
-            'tasks': this.#tasks
+            'tasks': this.#tasks,
+            'active': this.#active
         };
     };
 

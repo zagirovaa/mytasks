@@ -1,11 +1,12 @@
 export default class {
 
-    #uuid; #title; #message; #created;
+    #uuid; #title; #message; #created; #active;
     constructor(title, message) {
         this.#uuid = crypto.randomUUID();
         this.#title = title;
         this.#message = message;
         this.#created = new Date().toLocaleString();
+        this.#active = false;
     };
     get uuid() {
         return this.#uuid;
@@ -25,12 +26,19 @@ export default class {
     get created() {
         return this.#created;
     };
+    get active() {
+        return this.#active;
+    };
+    set active(condition) {
+        this.#active = condition
+    };
     toJSON() {
         return {
             'uuid': this.#uuid,
             'title': this.#title,
             'message': this.#message,
-            'created': this.#created
+            'created': this.#created,
+            'active': this.#active
         };
     };
 

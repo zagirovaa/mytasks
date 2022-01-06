@@ -8,15 +8,11 @@ export default class {
         this.#developer = context.developer;
     };
     show() {
-        const app = document.getElementById('app');
-        app.insertAdjacentHTML('beforeend', this.render());
-        const aboutDeleteButton = document.getElementById('about-modal-delete');
-        aboutDeleteButton.addEventListener('click', this.close);
+        document.getElementById('app').insertAdjacentHTML('beforeend', this.render());
+        document.getElementById('about-modal-close').addEventListener('click', this.close);
     };
     close() {
-        const app = document.getElementById('app');
-        const modal = document.getElementById('about-modal');
-        app.removeChild(modal);
+        document.getElementById('app').removeChild(document.getElementById('about-modal'));
     };
     render() {
         return `
@@ -25,7 +21,7 @@ export default class {
                 <div class="modal-card">
                     <header class="modal-card-head">
                         <p class="modal-card-title">${this.#title}</p>
-                        <button class="delete" aria-label="close" id='about-modal-delete'></button>
+                        <button class="delete" aria-label="close" id='about-modal-close'></button>
                     </header>
                     <section class="modal-card-body has-text-centered">
                         <h3 class="title is-3">${this.#name}</h3>
@@ -39,7 +35,6 @@ export default class {
                             ${this.#developer}
                         </h6>
                     </section>
-                    <footer class="modal-card-foot"></footer>
                 </div>
             </div>
         `;
