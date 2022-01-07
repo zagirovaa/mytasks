@@ -1,4 +1,3 @@
-import Group from './Group.js';
 import AboutModal from '../components/AboutModal.js';
 import GroupModal from '../components/GroupModal.js';
 
@@ -11,7 +10,12 @@ const aboutModalContext = {
     'developer': 'Zagirov Abdul Askerovich'
 };
 
-getData();
+const MODE = {
+    'ADD': 0,
+    'EDIT': 1
+};
+
+loadData();
 
 document.addEventListener('DOMContentLoaded', () => {
     setMenuItemsEventListeners();
@@ -22,6 +26,109 @@ document.addEventListener('DOMContentLoaded', () => {
         target.classList.toggle('is-active');
     });
 });
+
+
+function getData() {
+
+    myTasks = JSON.parse(localStorage.getItem('MyTasks')) || [];
+
+};
+
+
+function saveData() {
+
+    localStorage.setItem('MyTasks', JSON.stringify(myTasks));
+
+};
+
+
+function loadData() {
+
+    getData();
+    if (myTasks.length) {
+        const groupsPanel = document.getElementById('groups-panel');
+        const activeGroup = getActiveGroup();
+        const groupCount = document.getElementById('groups-count');
+        const renderText = myTasks.reduce((result, current) => {
+            result += `<a id="${current.uuid}" class="panel-block is-radiusless">${current.name}</a>`;
+            return result;
+        }, '');
+        groupsPanel.insertAdjacentHTML('beforeend', renderText);
+        drawActiveGroup(activeGroup.uuid);
+        groupCount.textContent = myTasks.length;
+        myTasks.forEach(el => {
+            document.getElementById(el.uuid).addEventListener('click', () => {
+                makeGroupActive(el.uuid);
+            });
+        });
+    };
+
+}
+
+
+function groupExists(name) {
+
+    if (myTasks.length) {
+        for (let group = 0; group < myTasks.length; group++) {
+            if (myTasks[group].name === name) {
+                return true;
+            };
+        };
+    };
+    return false;
+
+}
+
+
+function getActiveGroup() {
+
+    if (myTasks.length) {
+        for (let group = 0; group < myTasks.length; group++) {
+            if (myTasks[group].active) {
+                return myTasks[group];
+            };
+        };
+    };
+    return {};
+
+}
+
+
+function getIndexByUUID(uuid) {
+
+    if (myTasks.length) {
+        for (let group = 0; group < myTasks.length; group++) {
+            if (myTasks[group].uuid === uuid) {
+                return group;
+            };
+        };
+    };
+    return -1;
+
+}
+
+
+function drawActiveGroup(uuid) {
+
+    if (myTasks.length) {
+        const activePanelBlock = document.getElementById(uuid);
+        activePanelBlock.classList.add('has-background-info', 'has-text-white');
+    }
+
+}
+
+
+function makeGroupActive(uuid) {
+
+    const currentActiveGroup = document.getElementById(getActiveGroup().uuid);
+    const newActiveGroup = document.getElementById(uuid);
+    currentActiveGroup.classList.remove('has-background-info', 'has-text-white');
+    newActiveGroup.classList.add('has-background-info', 'has-text-white');
+    myTasks[getIndexByUUID(getActiveGroup().uuid)].active = false;
+    myTasks[getIndexByUUID(uuid)].active = true;
+    saveData();
+
+};
 
 
 function setMenuItemsEventListeners() {
@@ -72,7 +179,84 @@ function setMenuItemsEventListeners() {
         };
     });
 
-}
+};
+
+
+function addGroup() {
+
+    const groupModal = new GroupModal(MODE.ADD);
+    groupModal.show();
+
+};
+
+
+function editGroup() {
+
+    if (myTasks.length) {
+        const groupModal = new GroupModal(MODE.EDIT);
+        groupModal.show();
+    } else {
+        alert('No active group.')
+    };
+
+};
+
+
+function deleteGroup() {
+
+    const activeGroupID = getActiveGroup().uuid;
+    const currentActiveIndex = getIndexByUUID(activeGroupID);
+    const groupCount = document.getElementById('groups-count');
+    if (myTasks.length > 1) {
+        if (myTasks[currentActiveIndex - 1]) {
+            makeGroupActive(myTasks[currentActiveIndex - 1].uuid);
+        } else {
+            makeGroupActive(myTasks[currentActiveIndex + 1].uuid);
+        };
+    };
+    document.getElementById(activeGroupID).remove();
+    myTasks.splice(currentActiveIndex, 1);
+    groupCount.textContent = myTasks.length;
+    saveData();
+    drawActiveGroup(getActiveGroup().uuid);
+
+};
+
+
+function clearGroups() {
+
+    localStorage.clear();
+    myTasks = [];
+
+};
+
+
+function addTask() {
+
+    
+
+};
+
+
+function editTask() {
+
+    
+
+};
+
+
+function deleteTask() {
+
+    
+
+};
+
+
+function clearTasks() {
+
+
+
+};
 
 
 function showAbout() {
@@ -80,179 +264,35 @@ function showAbout() {
     const aboutModal = new AboutModal(aboutModalContext);
     aboutModal.show();
     
-}
-
-
-function getData() {
-
-    myTasks = JSON.parse(localStorage.getItem('MyTasks')) || [];
-
-}
-
-
-function saveData() {
-
-    localStorage.setItem('MyTasks', JSON.stringify(myTasks));
-
-}
-
-
-function setGroupItemsEventListeners() {
-
-    // const groupItems = Array.from(document.querySelectorAll('a.group'));
-    // if (groupItems.length) {
-    //     groupItems.forEach(el => {
-    //         let uuid = el.getAttribute('uuid');
-    //         el.addEventListener('click', () => {
-    //             makeGroupActive(uuid);
-    //         });
-    //     })
-    // };
-
-}
-
-
-function makeGroupActive(uuid = currentIDs.currentGroupId) {
-
-    // const currentGroupId = currentIDs.currentGroupId;
-    // const groupItems = Array.from(document.querySelectorAll('a.group'));
-    // currentIDs.currentGroupId = uuid;
-    // saveIdsToStorage();
-    // if (groupItems.length) {
-    //     groupItems.forEach(el => {
-    //         let selectedID = el.getAttribute('uuid');
-    //         if (selectedID == uuid) {
-    //             el.classList.add('has-background-info')
-    //             el.classList.add('has-text-white');
-    //         } else if (selectedID == currentGroupId) {
-    //             el.classList.remove('has-background-info')
-    //             el.classList.remove('has-text-white');
-    //         };
-    //     });
-    // };
-
-}
-
-
-function addGroup() {
-
-    const groupModal = new GroupModal('Add group');
-    groupModal.show();
-
-    // const groupName = window.prompt('Add new group name:', 'defaultName');
-    // if (groupName.trim()) {
-    //     if (myTasks) {
-    //         for (let group = 0; group < myTasks.groups.length; group++) {
-    //             if (myTasks.groups[group].name == groupName) {
-    //                 window.alert('Group with the same name already exists.');
-    //                 return;
-    //             };
-    //         };
-    //     };
-    //     let newGroup = new Group(groupName);
-    //     myTasks.groups.push(newGroup);
-    //     if (myTasks.groups.length == 1) {
-    //         myTasks.currentGroupId = newGroup.uuid;
-    //     };
-    //     saveData();
-    // } else {
-    //     window.alert('You did not enter group name.');
-    // };
-
-}
-
-
-function deleteGroup() {
-
-    // for (let group = 0; group < myGroups.length; group++) {
-    //     let uuidToRemove = myGroups[group].uuid;
-    //     if (currentIDs.currentGroupId == uuidToRemove) {
-    //         if (myGroups.length > 1) {
-    //             if (myGroups[group - 1]) {
-    //                 makeGroupActive(myGroups[group - 1].uuid);
-    //             } else {
-    //                 makeGroupActive(myGroups[group + 1].uuid);
-    //             };
-    //         };
-    //         myGroups.splice(group, 1);
-    //         let groupToRemove = document.querySelector('[uuid="' + uuidToRemove + '"]');
-    //         groupToRemove.parentNode.removeChild(groupToRemove);
-    //         saveGroupsToStorage();
-    //         return;
-    //     };
-    // };
-
-}
-
-
-function clearGroups() {
-
-    // localStorage.clear();
-    // myGroups = [];
-    // currentIDs = {};
-    // renderPage();
-
-}
-
-
-function editGroup() {
-
-    
-
-}
-
-
-function addTask() {
-
-    
-
-}
-
-
-function editTask() {
-
-    
-
-}
-
-
-function deleteTask() {
-
-    
-
-}
-
-
-function clearTasks() {
-
-
-
-}
+};
 
 
 function moveToFirstPage() {
 
 
 
-}
+};
 
 
 function moveToPreviousPage() {
 
     
 
-}
+};
 
 
 function moveToNextPage() {
 
     
 
-}
+};
 
 
 function moveToLastPage() {
 
     
 
-}
+};
+
+
+export {myTasks, getData, saveData, groupExists, getActiveGroup, getIndexByUUID, makeGroupActive};
