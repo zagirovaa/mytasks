@@ -227,6 +227,7 @@ function clearGroups() {
 
     localStorage.clear();
     myTasks = [];
+    location.reload();
 
 };
 

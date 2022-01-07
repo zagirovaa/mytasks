@@ -28,7 +28,7 @@ export default class {
                         <h5 class="subtitle is-5">Version ${this.#version}</h5>
                         <h6 class="subtitle is-6">
                             - Created using -<br>
-                            HTML ✦ CSS ✦ JAVASCRIPT ✦ BULMA
+                            Html ✦ Css ✦ Javascript ✦ Bulma
                         </h6>
                         <h6 class="subtitle is-6">
                             - Developer -<br>
