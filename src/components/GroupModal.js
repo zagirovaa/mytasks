@@ -100,7 +100,12 @@ export default class GroupModal {
                         <button class="delete group-modal-close" aria-label="close"></button>
                     </header>
                     <section class="modal-card-body">
-                        <input id="group-modal-input" class="input" type="text" placeholder="Enter group name">
+                        <div class="field">
+                            <label class="label">Group name:</label>
+                            <div class="control">
+                                <input id="group-modal-input" class="input" type="text">
+                            </div>
+                        </div>
                     </section>
                     <footer class="modal-card-foot">
                         <button id="group-modal-apply" class="button is-success">Apply</button>

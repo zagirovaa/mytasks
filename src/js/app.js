@@ -1,13 +1,14 @@
 import AboutModal from "../components/AboutModal.js";
 import GroupModal from "../components/GroupModal.js";
+import TaskModal from "../components/TaskModal.js";
 
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
         if(reg.installing) {
             console.log("Service worker installing");
-        } else if(reg.waiting) {
+        } else if (reg.waiting) {
             console.log("Service worker installed");
-        } else if(reg.active) {
+        } else if (reg.active) {
             console.log("Service worker active");
         };
     }).catch(function(error) {
@@ -248,7 +249,8 @@ function clearGroups() {
 
 function addTask() {
 
-    
+    const taskModal = new TaskModal(MODE.ADD);
+    taskModal.show();
 
 };
 
