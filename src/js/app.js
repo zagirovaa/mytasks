@@ -64,6 +64,7 @@ function loadData() {
         const groupsPanel = document.getElementById("groups-panel");
         const activeGroup = getActiveGroup();
         const groupCount = document.getElementById("groups-count");
+        const taskCount = document.getElementById("tasks-count");
         const renderText = localDB.reduce((result, current) => {
             result += `<a id="${current.uuid}" class="panel-block is-radiusless">${current.name}</a>`;
             return result;
@@ -83,7 +84,7 @@ function loadData() {
 
 function groupExists(name) {
 
-    for (let group of localDB) {
+    for (const group of localDB) {
         if (group.name === name) {
             return true;
         };
@@ -95,7 +96,7 @@ function groupExists(name) {
 
 function getActiveGroup() {
 
-    for (let group of localDB) {
+    for (const group of localDB) {
         if (group.active) {
             return group;
         };
@@ -238,7 +239,15 @@ function clearGroups() {
 
     localStorage.clear();
     localDB = [];
-    location.reload();
+    document.getElementById("groups-count").textContent = "0";
+    document.getElementById("tasks-count").textContent = "0";
+    const panels = document.querySelectorAll(".panel-heading");
+    panels.forEach(panel => {
+        const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
+        allSiblings.forEach(el => {
+            el.remove();
+        });
+    });
 
 };
 
