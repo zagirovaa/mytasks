@@ -13,7 +13,7 @@ export default class {
         document.getElementById("about-modal-close").addEventListener("click", this.close);
     };
     close() {
-        document.getElementById("app").removeChild(document.getElementById("about-modal"));
+        document.getElementById("about-modal").remove();
     };
     render() {
         return `
