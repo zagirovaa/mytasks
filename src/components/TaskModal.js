@@ -1,17 +1,18 @@
-import Group from "../js/Task.js";
+import Task from "../js/Task.js";
 
 
 export default class TaskModal {
 
-    #title; #mode;
+    #title; #mode; #local_db;
     
-    constructor(mode) {
+    constructor(mode, local_db) {
         this.#mode = mode;
         if (this.#mode) {
             this.#title = "Edit task";
         } else {
             this.#title = "Add task";
         };
+        this.#local_db = local_db;
     };
 
     show() {

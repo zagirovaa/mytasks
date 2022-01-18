@@ -1,6 +1,7 @@
 export default class {
 
     #title; #name; #version; #developer;
+    
     constructor(context) {
         this.#title = context.title;
         this.#name = context.name,

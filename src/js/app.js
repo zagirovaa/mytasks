@@ -16,7 +16,7 @@ if ("serviceWorker" in navigator) {
     });
 };
 
-let myTasks = [];
+let localDB = [];
 
 const aboutModalContext = {
     "title": "About",
@@ -45,14 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function getData() {
 
-    myTasks = JSON.parse(localStorage.getItem("MyTasks")) || [];
+    localDB = JSON.parse(localStorage.getItem("localDB")) || [];
 
 };
 
 
 function saveData() {
 
-    localStorage.setItem("MyTasks", JSON.stringify(myTasks));
+    localStorage.setItem("localDB", JSON.stringify(localDB));
 
 };
 
@@ -60,18 +60,18 @@ function saveData() {
 function loadData() {
 
     getData();
-    if (myTasks.length) {
+    if (localDB.length) {
         const groupsPanel = document.getElementById("groups-panel");
         const activeGroup = getActiveGroup();
         const groupCount = document.getElementById("groups-count");
-        const renderText = myTasks.reduce((result, current) => {
+        const renderText = localDB.reduce((result, current) => {
             result += `<a id="${current.uuid}" class="panel-block is-radiusless">${current.name}</a>`;
             return result;
         }, "");
         groupsPanel.insertAdjacentHTML("beforeend", renderText);
         drawActiveGroup(activeGroup.uuid);
-        groupCount.textContent = myTasks.length;
-        myTasks.forEach(el => {
+        groupCount.textContent = localDB.length;
+        localDB.forEach(el => {
             document.getElementById(el.uuid).addEventListener("click", () => {
                 makeGroupActive(el.uuid);
             });
@@ -83,11 +83,9 @@ function loadData() {
 
 function groupExists(name) {
 
-    if (myTasks.length) {
-        for (let group = 0; group < myTasks.length; group++) {
-            if (myTasks[group].name === name) {
-                return true;
-            };
+    for (let group of localDB) {
+        if (group.name === name) {
+            return true;
         };
     };
     return false;
@@ -97,11 +95,9 @@ function groupExists(name) {
 
 function getActiveGroup() {
 
-    if (myTasks.length) {
-        for (let group = 0; group < myTasks.length; group++) {
-            if (myTasks[group].active) {
-                return myTasks[group];
-            };
+    for (let group of localDB) {
+        if (group.active) {
+            return group;
         };
     };
     return {};
@@ -109,11 +105,11 @@ function getActiveGroup() {
 }
 
 
-function getIndexByUUID(uuid) {
+function getGroupIndexByUUID(uuid) {
 
-    if (myTasks.length) {
-        for (let group = 0; group < myTasks.length; group++) {
-            if (myTasks[group].uuid === uuid) {
+    if (localDB.length) {
+        for (let group = 0; group < localDB.length; group++) {
+            if (localDB[group].uuid === uuid) {
                 return group;
             };
         };
@@ -125,7 +121,7 @@ function getIndexByUUID(uuid) {
 
 function drawActiveGroup(uuid) {
 
-    if (myTasks.length) {
+    if (localDB.length) {
         const activePanelBlock = document.getElementById(uuid);
         activePanelBlock.classList.add("has-background-info", "has-text-white");
     }
@@ -139,8 +135,8 @@ function makeGroupActive(uuid) {
     const newActiveGroup = document.getElementById(uuid);
     currentActiveGroup.classList.remove("has-background-info", "has-text-white");
     newActiveGroup.classList.add("has-background-info", "has-text-white");
-    myTasks[getIndexByUUID(getActiveGroup().uuid)].active = false;
-    myTasks[getIndexByUUID(uuid)].active = true;
+    localDB[getGroupIndexByUUID(getActiveGroup().uuid)].active = false;
+    localDB[getGroupIndexByUUID(uuid)].active = true;
     saveData();
 
 };
@@ -199,7 +195,7 @@ function setMenuItemsEventListeners() {
 
 function addGroup() {
 
-    const groupModal = new GroupModal(MODE.ADD);
+    const groupModal = new GroupModal(MODE.ADD, localDB);
     groupModal.show();
 
 };
@@ -207,8 +203,8 @@ function addGroup() {
 
 function editGroup() {
 
-    if (myTasks.length) {
-        const groupModal = new GroupModal(MODE.EDIT);
+    if (localDB.length) {
+        const groupModal = new GroupModal(MODE.EDIT, localDB);
         groupModal.show();
     } else {
         alert("No active group.")
@@ -220,18 +216,18 @@ function editGroup() {
 function deleteGroup() {
 
     const activeGroupID = getActiveGroup().uuid;
-    const currentActiveIndex = getIndexByUUID(activeGroupID);
+    const currentActiveIndex = getGroupIndexByUUID(activeGroupID);
     const groupCount = document.getElementById("groups-count");
-    if (myTasks.length > 1) {
-        if (myTasks[currentActiveIndex - 1]) {
-            makeGroupActive(myTasks[currentActiveIndex - 1].uuid);
+    if (localDB.length > 1) {
+        if (localDB[currentActiveIndex - 1]) {
+            makeGroupActive(localDB[currentActiveIndex - 1].uuid);
         } else {
-            makeGroupActive(myTasks[currentActiveIndex + 1].uuid);
+            makeGroupActive(localDB[currentActiveIndex + 1].uuid);
         };
     };
     document.getElementById(activeGroupID).remove();
-    myTasks.splice(currentActiveIndex, 1);
-    groupCount.textContent = myTasks.length;
+    localDB.splice(currentActiveIndex, 1);
+    groupCount.textContent = localDB.length;
     saveData();
     drawActiveGroup(getActiveGroup().uuid);
 
@@ -241,7 +237,7 @@ function deleteGroup() {
 function clearGroups() {
 
     localStorage.clear();
-    myTasks = [];
+    localDB = [];
     location.reload();
 
 };
@@ -249,7 +245,7 @@ function clearGroups() {
 
 function addTask() {
 
-    const taskModal = new TaskModal(MODE.ADD);
+    const taskModal = new TaskModal(MODE.ADD, localDB);
     taskModal.show();
 
 };
@@ -257,7 +253,8 @@ function addTask() {
 
 function editTask() {
 
-    
+    const taskModal = new TaskModal(MODE.EDIT, localDB);
+    taskModal.show();
 
 };
 
@@ -312,4 +309,4 @@ function moveToLastPage() {
 };
 
 
-export {myTasks, getData, saveData, groupExists, getActiveGroup, getIndexByUUID, makeGroupActive};
+export {getData, saveData, groupExists, getActiveGroup, getGroupIndexByUUID, makeGroupActive};
