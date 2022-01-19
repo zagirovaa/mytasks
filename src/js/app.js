@@ -333,10 +333,10 @@ function deleteGroup() {
             makeGroupActive(localDB[currentActiveIndex + 1].uuid);
         };
     };
-    document.getElementById(activeGroupID).remove();
     localDB.splice(currentActiveIndex, 1);
-    groupCount.textContent = localDB.length;
     saveData();
+    document.getElementById(activeGroupID).remove();
+    groupCount.textContent = localDB.length;
     drawActiveGroup(getActiveGroup().uuid);
 
 };
@@ -377,7 +377,23 @@ function editTask() {
 
 function deleteTask() {
 
-    
+    const activeGroup = getActiveGroup();
+    if (activeGroup.tasks.length) {
+        const activeTaskID = getActiveTask().uuid;
+        const currentActiveIndex = getTaskIndex(activeTaskID);
+        const taskCount = document.getElementById("tasks-count");
+        if (activeGroup.tasks.length > 1) {
+            if (activeGroup.tasks[currentActiveIndex - 1]) {
+                makeTaskActive(activeGroup.tasks[currentActiveIndex - 1].uuid);
+            } else {
+                makeTaskActive(activeGroup.tasks[currentActiveIndex + 1].uuid);
+            };
+        };
+        activeGroup.tasks.splice(currentActiveIndex, 1);
+        saveData();
+        document.getElementById(activeTaskID).remove();
+        taskCount.textContent = activeGroup.tasks.length;
+    };
 
 };
 
