@@ -1,5 +1,12 @@
 import Task from "../js/Task.js";
-import { saveData, getActiveGroup, getActiveTask, makeTaskActive, drawActiveTask } from "../js/app.js";
+import { 
+    saveData, 
+    getActiveGroup, 
+    getActiveTask, 
+    makeTaskActive, 
+    drawActiveTask, 
+    getTaskIndex 
+} from "../js/app.js";
 
 
 export default class TaskModal {
@@ -48,13 +55,13 @@ export default class TaskModal {
         const taskMessage = document.getElementById("task-modal-textarea").value.trim() || "";
         if (taskTitle && taskMessage) {
             if (mode) {
-                // const activeGroup = getActiveGroup();
-                // const groupModalInput = document.getElementById("group-modal-input");
-                // const activePanelBlock = document.getElementById(activeGroup.uuid);
-                // const newGroupName = groupModalInput.value;
-                // activePanelBlock.textContent = newGroupName;
-                // this.#local_db[getGroupIndex(activeGroup.uuid)].name = newGroupName;
-                // saveData();
+                const activeTask = getActiveTask();
+                const activeGroup = getActiveGroup();
+                activeGroup.tasks[getTaskIndex(activeTask.uuid)].title = taskTitle;
+                activeGroup.tasks[getTaskIndex(activeTask.uuid)].message = taskMessage;
+                saveData();
+                document.querySelector(`#${activeTask.uuid} .title`).textContent = taskTitle;
+                document.querySelector(`#${activeTask.uuid} .content`).textContent = taskMessage;
             } else {
                 const newTask = new Task(taskTitle, taskMessage);
                 const tasksPanel = document.getElementById("tasks-panel");

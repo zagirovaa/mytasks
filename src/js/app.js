@@ -433,5 +433,6 @@ export {
     makeGroupActive, 
     drawActiveTask, 
     getActiveTask,
+    getTaskIndex, 
     makeTaskActive
 };
