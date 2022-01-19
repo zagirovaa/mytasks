@@ -1,10 +1,11 @@
 import Group from "../js/Group.js";
 import {
-        saveData, 
-        groupExists, 
-        getActiveGroup,
-        getGroupIndex,
-        makeGroupActive } from "../js/app.js";
+    saveData, 
+    groupExists, 
+    getActiveGroup,
+    getGroupIndex,
+    makeGroupActive 
+} from "../js/app.js";
 
 
 export default class GroupModal {

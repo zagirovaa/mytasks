@@ -11,16 +11,15 @@ import {
 
 export default class TaskModal {
 
-    #title; #mode; #local_db;
+    #title; #mode;
     
-    constructor(mode, local_db) {
+    constructor(mode) {
         this.#mode = mode;
         if (this.#mode) {
             this.#title = "Edit task";
         } else {
             this.#title = "Add task";
         };
-        this.#local_db = local_db;
     };
 
     show() {

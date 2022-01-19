@@ -361,7 +361,7 @@ function clearGroups() {
 
 function addTask() {
 
-    const taskModal = new TaskModal(modalMode.add, localDB);
+    const taskModal = new TaskModal(modalMode.add);
     taskModal.show();
 
 };
@@ -369,7 +369,7 @@ function addTask() {
 
 function editTask() {
 
-    const taskModal = new TaskModal(modalMode.edit, localDB);
+    const taskModal = new TaskModal(modalMode.edit);
     taskModal.show();
 
 };
