@@ -28,35 +28,6 @@ export default class {
     get tasks() {
         return this.#tasks;
     };
-    getTask(uuid) {
-        for (let task in this.#tasks) {
-            if (task.uuid === uuid) {
-                return task;
-            };
-        };
-    };
-    addTask(title, message) {
-        let newTask = new Task(title, message);
-        this.#tasks.push(newTask);
-    };
-    editTask(uuid, title, message) {
-        let currentTask = this.getTask(uuid);
-        if (currentTask) {
-            currentTask.title = title;
-            currentTask.message = message;
-        };
-    };
-    removeTask(uuid) {
-        for (let i = 0; i < this.#tasks.length; i++) {
-            if (this.#tasks[i].uuid == uuid) {
-                this.#tasks.splice(i, 1);
-                break;
-            };
-        };
-    };
-    clearTasks() {
-        this.#tasks = [];
-    };
     toJSON() {
         return {
             "uuid": this.#uuid,

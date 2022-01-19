@@ -400,7 +400,15 @@ function deleteTask() {
 
 function clearTasks() {
 
-
+    const activeGroup = getActiveGroup();
+    activeGroup.tasks = [];
+    saveData();
+    const panel = document.querySelector("#tasks-panel .panel-heading");
+    const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
+    allSiblings.forEach(el => {
+        el.remove();
+    });
+    document.getElementById("tasks-count").textContent = "0";
 
 };
 
