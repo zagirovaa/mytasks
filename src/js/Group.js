@@ -5,7 +5,7 @@ export default class {
 
     #uuid; #name; #tasks; #active;
     constructor(name) {
-        this.#uuid = crypto.randomUUID();
+        this.#uuid = "group-" + crypto.randomUUID();
         this.#name = name;
         this.#tasks = [];
         this.#active = false;
@@ -24,6 +24,9 @@ export default class {
     };
     set active(condition) {
         this.#active = condition;
+    };
+    get tasks() {
+        return this.#tasks;
     };
     getTask(uuid) {
         for (let task in this.#tasks) {

@@ -3,7 +3,7 @@ import {
         saveData, 
         groupExists, 
         getActiveGroup,
-        getGroupIndexByUUID,
+        getGroupIndex,
         makeGroupActive } from "../js/app.js";
 
 
@@ -58,23 +58,23 @@ export default class GroupModal {
                     const activePanelBlock = document.getElementById(activeGroup.uuid);
                     const newGroupName = groupModalInput.value;
                     activePanelBlock.textContent = newGroupName;
-                    this.#local_db[getGroupIndexByUUID(activeGroup.uuid)].name = newGroupName;
+                    this.#local_db[getGroupIndex(activeGroup.uuid)].name = newGroupName;
                     saveData();
                 } else {
                     const newGroup = new Group(groupName);
-                    const groupPanel = document.getElementById("groups-panel");
-                    const groupCount = document.getElementById("groups-count");
+                    const groupsPanel = document.getElementById("groups-panel");
+                    const groupsCount = document.getElementById("groups-count");
                     if (! this.#local_db.length)  {
                         newGroup.active = true;
                     };
                     this.#local_db.push(newGroup);
                     saveData();
-                    groupPanel.insertAdjacentHTML("beforeend", `
+                    groupsPanel.insertAdjacentHTML("beforeend", `
                         ${this.#local_db.length == 1 ? 
                         `<a id="${newGroup.uuid}" class="panel-block is-radiusless has-background-info has-text-white">${newGroup.name}</a>` 
                         : `<a id="${newGroup.uuid}" class="panel-block is-radiusless">${newGroup.name}</a>`}
                     `);
-                    groupCount.textContent = this.#local_db.length;
+                    groupsCount.textContent = this.#local_db.length;
                     document.getElementById(newGroup.uuid).addEventListener("click", el => {
                         makeGroupActive(newGroup.uuid);
                     });

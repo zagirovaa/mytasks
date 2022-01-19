@@ -1,4 +1,5 @@
 import Task from "../js/Task.js";
+import { saveData, getActiveGroup, getActiveTask, makeTaskActive, drawActiveTask } from "../js/app.js";
 
 
 export default class TaskModal {
@@ -21,7 +22,7 @@ export default class TaskModal {
         const taskModalClose = document.querySelectorAll(".task-modal-close");
         const taskModalApplyBtn = document.getElementById("task-modal-apply");
         const taskModalInput = document.getElementById("task-modal-input");
-        const taskModalTextArea = document.getAnimations("task-modal-textarea");
+        const taskModalTextArea = document.getElementById("task-modal-textarea");
         taskModalClose.forEach(el => {
             el.addEventListener("click", TaskModal.close);
         });
@@ -35,13 +36,64 @@ export default class TaskModal {
             };
         });
         if (this.#mode) {
-            
+            const activeTask = getActiveTask();
+            taskModalInput.value = activeTask.title;
+            taskModalTextArea.value = activeTask.message;
         };
         taskModalInput.focus();
     };
 
     apply(mode) {
-        
+        const taskTitle = document.getElementById("task-modal-input").value.trim() || "";
+        const taskMessage = document.getElementById("task-modal-textarea").value.trim() || "";
+        if (taskTitle && taskMessage) {
+            if (mode) {
+                // const activeGroup = getActiveGroup();
+                // const groupModalInput = document.getElementById("group-modal-input");
+                // const activePanelBlock = document.getElementById(activeGroup.uuid);
+                // const newGroupName = groupModalInput.value;
+                // activePanelBlock.textContent = newGroupName;
+                // this.#local_db[getGroupIndex(activeGroup.uuid)].name = newGroupName;
+                // saveData();
+            } else {
+                const newTask = new Task(taskTitle, taskMessage);
+                const tasksPanel = document.getElementById("tasks-panel");
+                const tasksCount = document.getElementById("tasks-count");
+                const activeGroup = getActiveGroup();
+                if (! activeGroup.tasks.length)  {
+                    newTask.active = true;
+                };
+                activeGroup.tasks.push(newTask);
+                saveData();
+                tasksPanel.insertAdjacentHTML("beforeend", `
+                    <a id="${newTask.uuid}" class="panel-block is-radiusless">
+                        <div class="card is-shadowless">
+                            <div class="card-content is-radiusless">
+                                <div class="media">
+                                    <div class="media-content">
+                                        <p class="title is-4">${newTask.title}</p>
+                                        <p class="subtitle is-6">
+                                            <time datetime="${newTask.created}">${newTask.created}</time>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="content">${newTask.message}</div>
+                            </div>
+                        </div>
+                    </a>
+                `);
+                if (newTask.active) {
+                    drawActiveTask(newTask.uuid);
+                };
+                tasksCount.textContent = activeGroup.tasks.length;
+                document.getElementById(newTask.uuid).addEventListener("click", el => {
+                    makeTaskActive(newTask.uuid);
+                });
+            };
+            TaskModal.close();
+        } else {
+            alert("Fill in all the fields.");
+        };
     };
 
     static close() {
@@ -81,19 +133,3 @@ export default class TaskModal {
     };
 
 }
-
-{/* <a class="panel-block has-background-info is-radiusless is-active">
-    <div class="card is-shadowless ">
-        <div class="card-content has-background-info is-radiusless">
-            <div class="media">
-                <div class="media-content">
-                    <p class="title is-4 has-text-white">Title</p>
-                    <p class="subtitle is-6 has-text-white">
-                        <time datetime="2016-1-1">06-01-2021 11:33:18</time>
-                    </p>
-                </div>
-            </div>
-            <div class="content has-text-white">Lorem ipsum dolor sit amet consectetur.</div>
-        </div>
-    </div>
-</a> */}
