@@ -5,7 +5,8 @@ import {
     getActiveTask, 
     makeTaskActive, 
     drawActiveTask, 
-    getTaskIndex 
+    getTaskIndex, 
+    updateTasksList
 } from "../js/app.js";
 
 
@@ -71,30 +72,31 @@ export default class TaskModal {
                 };
                 activeGroup.tasks.push(newTask);
                 saveData();
-                tasksPanel.insertAdjacentHTML("beforeend", `
-                    <a id="${newTask.uuid}" class="panel-block is-radiusless">
-                        <div class="card is-shadowless">
-                            <div class="card-content is-radiusless">
-                                <div class="media">
-                                    <div class="media-content">
-                                        <p class="title is-4">${newTask.title}</p>
-                                        <p class="subtitle is-6">
-                                            <time datetime="${newTask.created}">${newTask.created}</time>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="content">${newTask.message}</div>
-                            </div>
-                        </div>
-                    </a>
-                `);
-                if (newTask.active) {
-                    drawActiveTask(newTask.uuid);
-                };
-                tasksCount.textContent = activeGroup.tasks.length;
-                document.getElementById(newTask.uuid).addEventListener("click", el => {
-                    makeTaskActive(newTask.uuid);
-                });
+                updateTasksList();
+                // tasksPanel.insertAdjacentHTML("beforeend", `
+                //     <a id="${newTask.uuid}" class="panel-block is-radiusless">
+                //         <div class="card is-shadowless">
+                //             <div class="card-content is-radiusless">
+                //                 <div class="media">
+                //                     <div class="media-content">
+                //                         <p class="title is-4">${newTask.title}</p>
+                //                         <p class="subtitle is-6">
+                //                             <time datetime="${newTask.created}">${newTask.created}</time>
+                //                         </p>
+                //                     </div>
+                //                 </div>
+                //                 <div class="content">${newTask.message}</div>
+                //             </div>
+                //         </div>
+                //     </a>
+                // `);
+                // if (newTask.active) {
+                //     drawActiveTask(newTask.uuid);
+                // };
+                // tasksCount.textContent = activeGroup.tasks.length;
+                // document.getElementById(newTask.uuid).addEventListener("click", el => {
+                //     makeTaskActive(newTask.uuid);
+                // });
             };
             this.close();
         } else {

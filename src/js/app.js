@@ -76,17 +76,22 @@ function loadData() {
         groupsCount.textContent = localDB.length;
         localDB.forEach(el => {
             document.getElementById(el.uuid).addEventListener("click", () => {
-                makeGroupActive(el.uuid);
+                toggleActiveGroup(el.uuid);
             });
         });
         if (activeGroup.tasks.length) {
-            updateTasksList();
+            changePage();
         };
     };
 
 }
 
 
+/* 
+    Subroutines related to groups
+ */
+
+// Checks whether group with a given name already exists
 function groupExists(name) {
 
     if (localDB.length) {
@@ -101,6 +106,7 @@ function groupExists(name) {
 }
 
 
+// Returnes a group that is active
 function getActiveGroup() {
 
     if (localDB.length) {
@@ -115,6 +121,7 @@ function getActiveGroup() {
 }
 
 
+// Returns an index of active group
 function getGroupIndex(uuid) {
 
     if (localDB.length) {
@@ -129,6 +136,7 @@ function getGroupIndex(uuid) {
 }
 
 
+// Changes background of group element with a given uuid to be active
 function drawActiveGroup(uuid) {
 
     const activeGroup = document.getElementById(uuid) || null;
@@ -139,21 +147,41 @@ function drawActiveGroup(uuid) {
 }
 
 
-function makeGroupActive(uuid) {
+// Changes background of group element with a given uuid to be inactive
+function drawInActiveGroup() {
 
     const activeGroup = document.getElementById(getActiveGroup().uuid) || null;
     if (activeGroup) {
         activeGroup.classList.remove("has-background-info", "has-text-white");
-        drawActiveGroup(uuid);
-        localDB[getGroupIndex(getActiveGroup().uuid)].active = false;
-        localDB[getGroupIndex(uuid)].active = true;
-        saveData();
-        updateTasksList();
     };
+
+}
+
+
+// Changes current active group to the one with the given uuid
+function makeGroupActive(uuid) {
+
+    localDB[getGroupIndex(getActiveGroup().uuid)].active = false;
+    localDB[getGroupIndex(uuid)].active = true;
 
 };
 
 
+// Toggles active group
+function toggleActiveGroup(uuid) {
+
+    currentPage = 0;
+    pagesCount = 0;
+    drawInActiveGroup();
+    drawActiveGroup(uuid);
+    makeGroupActive(uuid);
+    updateTasksList();
+    saveData();
+
+}
+
+
+// Clears the contents of panel with group elements
 function clearGroupsPanel() {
 
     const panel = document.querySelector("#groups-panel .panel-heading");
@@ -166,6 +194,101 @@ function clearGroupsPanel() {
 }
 
 
+/* 
+    Subroutines related to tasks
+ */
+
+// Returnes a task that is active
+function getActiveTask() {
+
+    const activeGroup = getActiveGroup();
+    if (activeGroup.tasks.length) {
+        for (const task of activeGroup.tasks) {
+            if (task.active) {
+                return task;
+            };
+        };
+    };
+    return {};
+
+}
+
+
+// Returns an index of active task
+function getTaskIndex(uuid) {
+
+    const activeGroup = getActiveGroup();
+    if (activeGroup.tasks.length) {
+        for (let task = 0; task < activeGroup.tasks.length; task++) {
+            if (activeGroup.tasks[task].uuid === uuid) {
+                return task;
+            };
+        };
+    };
+    return -1;
+
+}
+
+
+// Changes background of task element with a given uuid to be active
+function drawActiveTask(uuid) {
+
+    const activeTask = document.getElementById(uuid);
+    const cardContent = document.querySelector(`#${uuid} .card-content`);
+    const title = document.querySelector(`#${uuid} .title`);
+    const subtitle = document.querySelector(`#${uuid} .subtitle`);
+    const content = document.querySelector(`#${uuid} .content`);
+    activeTask.classList.add("has-background-info");
+    cardContent.classList.add("has-background-info");
+    title.classList.add("has-text-white");
+    subtitle.classList.add("has-text-white");
+    content.classList.add("has-text-white");
+
+}
+
+
+// Changes background of task element with a given uuid to be inactive
+function drawInActiveTask() {
+
+    const activeTask = getActiveTask();
+    const activeTaskBlock = document.getElementById(activeTask.uuid) || null;
+    if (activeTaskBlock) {
+        const cardContent = document.querySelector(`#${activeTask.uuid} .card-content`);
+        const title = document.querySelector(`#${activeTask.uuid} .title`);
+        const subtitle = document.querySelector(`#${activeTask.uuid} .subtitle`);
+        const content = document.querySelector(`#${activeTask.uuid} .content`);
+        activeTaskBlock.classList.remove("has-background-info");
+        cardContent.classList.remove("has-background-info");
+        title.classList.remove("has-text-white");
+        subtitle.classList.remove("has-text-white");
+        content.classList.remove("has-text-white");
+    };
+
+}
+
+
+// Changes current active task to the one with the given uuid
+function makeTaskActive(uuid) {
+
+    const activeGroup = getActiveGroup();
+    activeGroup.tasks[getTaskIndex(getActiveTask().uuid)].active = false;
+    activeGroup.tasks[getTaskIndex(uuid)].active = true;
+
+}
+
+
+// Toggles active task
+function toggleActiveTask(uuid) {
+    
+    drawInActiveTask();
+    drawActiveTask(uuid);
+    makeTaskActive(uuid);
+    saveData();
+
+}
+
+
+// Clears the contents of panel with task elements
 function clearTasksPanel() {
 
     const panel = document.querySelector("#tasks-panel .panel-heading");
@@ -174,6 +297,35 @@ function clearTasksPanel() {
         el.remove();
     });
     document.getElementById("tasks-count").textContent = "0";
+
+}
+
+
+function getCurrentPageTasks() {
+
+    const activeGroup = getActiveGroup();
+    if (activeGroup.tasks.length <= TASKS_PER_PAGE) {
+        pagesCount = 1;
+    } else {
+        pagesCount = Math.ceil(activeGroup.tasks.length / TASKS_PER_PAGE);
+    };
+    if (currentPage == 0) {
+        currentPage = 1;
+    };
+    const startItem = currentPage * TASKS_PER_PAGE - TASKS_PER_PAGE;
+    const endItem = startItem + TASKS_PER_PAGE;
+    const outputList = activeGroup.tasks.slice(startItem, endItem);
+    return outputList;
+
+}
+
+
+// 
+function changePage() {
+
+    const outputList = getCurrentPageTasks();
+    makeTaskActive(outputList[0].uuid);
+    updateTasksList();
 
 }
 
@@ -187,16 +339,7 @@ function updateTasksList() {
         const tasksPanel = document.getElementById("tasks-panel");
         const tasksCount = document.getElementById("tasks-count");
         const activeTask = getActiveTask();
-        if (activeGroup.tasks.length <= TASKS_PER_PAGE) {
-            pagesCount = 1;
-            currentPage = 1;
-        } else {
-            pagesCount = Math.ceil(activeGroup.tasks.length / TASKS_PER_PAGE);
-            currentPage = 1;
-        };
-        const startItem = currentPage * TASKS_PER_PAGE - TASKS_PER_PAGE;
-        const endItem = startItem + TASKS_PER_PAGE;
-        const outputList = activeGroup.tasks.slice(startItem, endItem)
+        const outputList = getCurrentPageTasks();
         const renderTasks = outputList.reduce((result, current) => {
             result += `
                 <a id="${current.uuid}" class="panel-block is-radiusless">
@@ -218,11 +361,11 @@ function updateTasksList() {
             return result;
         }, "");
         tasksPanel.insertAdjacentHTML("beforeend", renderTasks);
-        drawActiveTask(activeTask.uuid);
+        toggleActiveTask(outputList[0].uuid);
         tasksCount.textContent = activeGroup.tasks.length;
         outputList.forEach(el => {
             document.getElementById(el.uuid).addEventListener("click", () => {
-                makeTaskActive(el.uuid);
+                toggleActiveTask(el.uuid);
             });
         });
     } else {
@@ -234,76 +377,11 @@ function updateTasksList() {
 }
 
 
-function getActiveTask() {
+/* 
+    Subroutines related to event handling
+ */
 
-    const activeGroup = getActiveGroup();
-    if (activeGroup.tasks.length) {
-        for (const task of activeGroup.tasks) {
-            if (task.active) {
-                return task;
-            };
-        };
-    };
-    return {};
-
-}
-
-
-function makeTaskActive(uuid) {
-
-    const activeGroup = getActiveGroup();
-    const activeTask = getActiveTask();
-    const activeTaskBlock = document.getElementById(activeTask.uuid) || null;
-    if (activeTaskBlock) {
-        const cardContent = document.querySelector(`#${activeTask.uuid} .card-content`);
-        const title = document.querySelector(`#${activeTask.uuid} .title`);
-        const subtitle = document.querySelector(`#${activeTask.uuid} .subtitle`);
-        const content = document.querySelector(`#${activeTask.uuid} .content`);
-        activeTaskBlock.classList.remove("has-background-info");
-        cardContent.classList.remove("has-background-info");
-        title.classList.remove("has-text-white");
-        subtitle.classList.remove("has-text-white");
-        content.classList.remove("has-text-white");
-    };
-    drawActiveTask(uuid);
-    activeGroup.tasks[getTaskIndex(getActiveTask().uuid)].active = false;
-    activeGroup.tasks[getTaskIndex(uuid)].active = true;
-    saveData();
-
-}
-
-
-function getTaskIndex(uuid) {
-
-    const activeGroup = getActiveGroup();
-    if (activeGroup.tasks.length) {
-        for (let task = 0; task < activeGroup.tasks.length; task++) {
-            if (activeGroup.tasks[task].uuid === uuid) {
-                return task;
-            };
-        };
-    };
-    return -1;
-
-}
-
-
-function drawActiveTask(uuid) {
-
-    const activeTask = document.getElementById(uuid);
-    const cardContent = document.querySelector(`#${uuid} .card-content`);
-    const title = document.querySelector(`#${uuid} .title`);
-    const subtitle = document.querySelector(`#${uuid} .subtitle`);
-    const content = document.querySelector(`#${uuid} .content`);
-    activeTask.classList.add("has-background-info");
-    cardContent.classList.add("has-background-info");
-    title.classList.add("has-text-white");
-    subtitle.classList.add("has-text-white");
-    content.classList.add("has-text-white");
-
-}
-
-
+// 
 function setMenuItemsEventListeners() {
 
     const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
@@ -337,16 +415,16 @@ function setMenuItemsEventListeners() {
             case "About":
                 el.addEventListener("click", showAbout);
                 break;
-            case "&#171;":
+            case "«":
                 el.addEventListener("click", moveToFirstPage);
                 break;
-            case "&#8249;":
+            case "‹":
                 el.addEventListener("click", moveToPreviousPage);
                 break;
-            case "&#8250;":
+            case "›":
                 el.addEventListener("click", moveToNextPage);
                 break;
-            case "&#187;":
+            case "»":
                 el.addEventListener("click", moveToLastPage);
                 break;
         };
@@ -380,9 +458,9 @@ function deleteGroup() {
     const groupCount = document.getElementById("groups-count");
     if (localDB.length > 1) {
         if (localDB[currentActiveIndex - 1]) {
-            makeGroupActive(localDB[currentActiveIndex - 1].uuid);
+            toggleActiveGroup(localDB[currentActiveIndex - 1].uuid);
         } else {
-            makeGroupActive(localDB[currentActiveIndex + 1].uuid);
+            toggleActiveGroup(localDB[currentActiveIndex + 1].uuid);
         };
     };
     localDB.splice(currentActiveIndex, 1);
@@ -463,28 +541,36 @@ function showAbout() {
 
 function moveToFirstPage() {
 
-
+    currentPage = 1;
+    changePage();
 
 };
 
 
 function moveToPreviousPage() {
 
-    
+    if (currentPage > 1) {
+        currentPage -= 1;
+        changePage();
+    };
 
 };
 
 
 function moveToNextPage() {
 
-    
+    if (currentPage < pagesCount) {
+        currentPage += 1;
+        changePage();
+    };
 
 };
 
 
 function moveToLastPage() {
 
-    
+    currentPage = pagesCount;
+    changePage();
 
 };
 
@@ -494,9 +580,10 @@ export {
     groupExists, 
     getActiveGroup, 
     getGroupIndex, 
-    makeGroupActive, 
+    toggleActiveGroup, 
     drawActiveTask, 
     getActiveTask,
     getTaskIndex, 
-    makeTaskActive
+    makeTaskActive, 
+    updateTasksList
 };

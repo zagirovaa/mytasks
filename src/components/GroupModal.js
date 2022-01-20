@@ -3,8 +3,8 @@ import {
     saveData, 
     groupExists, 
     getActiveGroup,
-    getGroupIndex,
-    makeGroupActive 
+    getGroupIndex, 
+    toggleActiveGroup
 } from "../js/app.js";
 
 
@@ -77,7 +77,7 @@ export default class GroupModal {
                     `);
                     groupsCount.textContent = this.#local_db.length;
                     document.getElementById(newGroup.uuid).addEventListener("click", el => {
-                        makeGroupActive(newGroup.uuid);
+                        toggleActiveGroup(newGroup.uuid);
                     });
                 };
                 GroupModal.close();
