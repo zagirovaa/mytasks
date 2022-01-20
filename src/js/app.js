@@ -292,11 +292,15 @@ function toggleActiveTask(uuid) {
 function clearTasksPanel() {
 
     const panel = document.querySelector("#tasks-panel .panel-heading");
+    const pagination = document.getElementById("pagination");
     const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
     allSiblings.forEach(el => {
         el.remove();
     });
     document.getElementById("tasks-count").textContent = "0";
+    currentPage = 0;
+    pagesCount = 0;
+    pagination.textContent = `${currentPage} of ${pagesCount}`;
 
 }
 
@@ -516,6 +520,7 @@ function deleteTask() {
         saveData();
         document.getElementById(activeTaskID).remove();
         taskCount.textContent = activeGroup.tasks.length;
+        updateTasksList();
     };
 
 };
