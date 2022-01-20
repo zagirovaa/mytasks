@@ -1,7 +1,4 @@
-import Task from "./Task.js";
-
-
-export default class {
+export default class Group {
 
     #uuid; #name; #tasks; #active;
     constructor(name) {

@@ -17,6 +17,9 @@ if ("serviceWorker" in navigator) {
 };
 
 let localDB = [];
+let pagesCount = 0;
+let currentPage = 0;
+const TASKS_PER_PAGE = 10;
 
 const helpContext = {
     "title": "About",
@@ -62,8 +65,8 @@ function loadData() {
     getData();
     if (localDB.length) {
         const groupsPanel = document.getElementById("groups-panel");
-        const activeGroup = getActiveGroup();
         const groupsCount = document.getElementById("groups-count");
+        const activeGroup = getActiveGroup();
         const renderGroups = localDB.reduce((result, current) => {
             result += `<a id="${current.uuid}" class="panel-block is-radiusless">${current.name}</a>`;
             return result;
@@ -77,39 +80,7 @@ function loadData() {
             });
         });
         if (activeGroup.tasks.length) {
-            const tasksPanel = document.getElementById("tasks-panel");
-            const tasksCount = document.getElementById("tasks-count");
-            const activeTask = getActiveTask();
-            if (activeTask) {
-                const renderTasks = activeGroup.tasks.reduce((result, current) => {
-                    result += `
-                        <a id="${current.uuid}" class="panel-block is-radiusless">
-                            <div class="card is-shadowless">
-                                <div class="card-content is-radiusless">
-                                    <div class="media">
-                                        <div class="media-content">
-                                            <p class="title is-4">${current.title}</p>
-                                            <p class="subtitle is-6">
-                                                <time datetime="${current.created}">${current.created}</time>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="content">${current.message}</div>
-                                </div>
-                            </div>
-                        </a>
-                    `;
-                    return result;
-                }, "");
-                tasksPanel.insertAdjacentHTML("beforeend", renderTasks);
-                drawActiveTask(activeTask.uuid);
-                tasksCount.textContent = activeGroup.tasks.length;
-                activeGroup.tasks.forEach(el => {
-                    document.getElementById(el.uuid).addEventListener("click", () => {
-                        makeTaskActive(el.uuid);
-                    });
-                });
-            };
+            updateTasksList();
         };
     };
 
@@ -177,9 +148,90 @@ function makeGroupActive(uuid) {
         localDB[getGroupIndex(getActiveGroup().uuid)].active = false;
         localDB[getGroupIndex(uuid)].active = true;
         saveData();
+        updateTasksList();
     };
 
 };
+
+
+function clearGroupsPanel() {
+
+    const panel = document.querySelector("#groups-panel .panel-heading");
+    const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
+    allSiblings.forEach(el => {
+        el.remove();
+    });
+    document.getElementById("groups-count").textContent = "0";
+
+}
+
+
+function clearTasksPanel() {
+
+    const panel = document.querySelector("#tasks-panel .panel-heading");
+    const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
+    allSiblings.forEach(el => {
+        el.remove();
+    });
+    document.getElementById("tasks-count").textContent = "0";
+
+}
+
+
+function updateTasksList() {
+
+    const activeGroup = getActiveGroup();
+    const pagination = document.getElementById("pagination");
+    clearTasksPanel();
+    if (activeGroup.tasks.length) {
+        const tasksPanel = document.getElementById("tasks-panel");
+        const tasksCount = document.getElementById("tasks-count");
+        const activeTask = getActiveTask();
+        if (activeGroup.tasks.length <= TASKS_PER_PAGE) {
+            pagesCount = 1;
+            currentPage = 1;
+        } else {
+            pagesCount = Math.ceil(activeGroup.tasks.length / TASKS_PER_PAGE);
+            currentPage = 1;
+        };
+        const startItem = currentPage * TASKS_PER_PAGE - TASKS_PER_PAGE;
+        const endItem = startItem + TASKS_PER_PAGE;
+        const outputList = activeGroup.tasks.slice(startItem, endItem)
+        const renderTasks = outputList.reduce((result, current) => {
+            result += `
+                <a id="${current.uuid}" class="panel-block is-radiusless">
+                    <div class="card is-shadowless">
+                        <div class="card-content is-radiusless">
+                            <div class="media">
+                                <div class="media-content">
+                                    <p class="title is-4">${current.title}</p>
+                                    <p class="subtitle is-6">
+                                        <time datetime="${current.created}">${current.created}</time>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="content">${current.message}</div>
+                        </div>
+                    </div>
+                </a>
+            `;
+            return result;
+        }, "");
+        tasksPanel.insertAdjacentHTML("beforeend", renderTasks);
+        drawActiveTask(activeTask.uuid);
+        tasksCount.textContent = activeGroup.tasks.length;
+        outputList.forEach(el => {
+            document.getElementById(el.uuid).addEventListener("click", () => {
+                makeTaskActive(el.uuid);
+            });
+        });
+    } else {
+        currentPage = 0;
+        pagesCount = 0;
+    };
+    pagination.textContent = `${currentPage} of ${pagesCount}`;
+
+}
 
 
 function getActiveTask() {
@@ -346,15 +398,8 @@ function clearGroups() {
 
     localStorage.clear();
     localDB = [];
-    document.getElementById("groups-count").textContent = "0";
-    document.getElementById("tasks-count").textContent = "0";
-    const panels = document.querySelectorAll(".panel-heading");
-    panels.forEach(panel => {
-        const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
-        allSiblings.forEach(el => {
-            el.remove();
-        });
-    });
+    clearGroupsPanel();
+    clearTasksPanel();
 
 };
 
@@ -401,14 +446,9 @@ function deleteTask() {
 function clearTasks() {
 
     const activeGroup = getActiveGroup();
-    activeGroup.tasks = [];
+    activeGroup.tasks.length = 0;
     saveData();
-    const panel = document.querySelector("#tasks-panel .panel-heading");
-    const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
-    allSiblings.forEach(el => {
-        el.remove();
-    });
-    document.getElementById("tasks-count").textContent = "0";
+    clearTasksPanel();
 
 };
 

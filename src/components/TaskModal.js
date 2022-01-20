@@ -30,7 +30,7 @@ export default class TaskModal {
         const taskModalInput = document.getElementById("task-modal-input");
         const taskModalTextArea = document.getElementById("task-modal-textarea");
         taskModalClose.forEach(el => {
-            el.addEventListener("click", TaskModal.close);
+            el.addEventListener("click", this.close);
         });
         taskModalApplyBtn.addEventListener("click", () => {
             this.apply(this.#mode);
@@ -66,7 +66,7 @@ export default class TaskModal {
                 const tasksPanel = document.getElementById("tasks-panel");
                 const tasksCount = document.getElementById("tasks-count");
                 const activeGroup = getActiveGroup();
-                if (! activeGroup.tasks.length)  {
+                if (! activeGroup.tasks.length) {
                     newTask.active = true;
                 };
                 activeGroup.tasks.push(newTask);
@@ -96,13 +96,13 @@ export default class TaskModal {
                     makeTaskActive(newTask.uuid);
                 });
             };
-            TaskModal.close();
+            this.close();
         } else {
             alert("Fill in all the fields.");
         };
     };
 
-    static close() {
+    close() {
         document.getElementById("task-modal").remove();
     };
 
