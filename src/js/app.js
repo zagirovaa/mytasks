@@ -2,7 +2,11 @@ import AboutModal from "../components/AboutModal.js";
 import GroupModal from "../components/GroupModal.js";
 import TaskModal from "../components/TaskModal.js";
 
-// Service Worker registration block
+
+/* 
+    Service Worker registration block
+ */
+
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
         if(reg.installing) {
@@ -16,6 +20,11 @@ if ("serviceWorker" in navigator) {
         console.log("Registration failed with " + error);
     });
 };
+
+
+/* 
+    Initialization block
+ */
 
 let localDB = [];
 let pagesCount = 0;
@@ -34,11 +43,85 @@ const modalMode = {
     "edit": 1
 };
 
-loadData();
 
-// Navbar burger event handler setting
+/* 
+    Main algorithm
+ */
+
+getData();
+// No need to load anything if there is no data
+if (localDB.length) {
+    const groupsPanel = document.getElementById("groups-panel");
+    const groupsCount = document.getElementById("groups-count");
+    const activeGroup = getActiveGroup();
+    const renderGroups = localDB.reduce((result, current) => {
+        result += `<a id="${current.uuid}" class="panel-block is-radiusless">${current.name}</a>`;
+        return result;
+    }, "");
+    groupsPanel.insertAdjacentHTML("beforeend", renderGroups);
+    drawActiveGroup(activeGroup.uuid);
+    groupsCount.textContent = localDB.length;
+    // Groups event handlers
+    localDB.forEach(el => {
+        document.getElementById(el.uuid).addEventListener("click", () => {
+            toggleActiveGroup(el.uuid);
+        });
+    });
+    // Tasks of active group are loaded if there is any
+    if (activeGroup.tasks.length) {
+        changePage();
+    };
+};
+
+// Settting event hadlers after main page load
 document.addEventListener("DOMContentLoaded", () => {
-    setMenuItemsEventListeners();
+    // Main menu event hadlers
+    const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
+    menuItems.forEach(el => {
+        const menuText = el.textContent;
+        switch (menuText) {
+            case "Add new group":
+                el.addEventListener("click", addGroup);
+                break;
+            case "Edit current group":
+                el.addEventListener("click", editGroup);
+                break;
+            case "Delete current group":
+                el.addEventListener("click", deleteGroup);
+                break;
+            case "Clear all groups":
+                el.addEventListener("click", clearGroups);
+                break;
+            case "Add new task":
+                el.addEventListener("click", addTask);
+                break;
+            case "Edit current task":
+                el.addEventListener("click", editTask);
+                break;
+            case "Delete current task":
+                el.addEventListener("click", deleteTask);
+                break;
+            case "Clear all tasks":
+                el.addEventListener("click", clearTasks);
+                break;
+            case "About":
+                el.addEventListener("click", showAbout);
+                break;
+            case "«":
+                el.addEventListener("click", moveToFirstPage);
+                break;
+            case "‹":
+                el.addEventListener("click", moveToPreviousPage);
+                break;
+            case "›":
+                el.addEventListener("click", moveToNextPage);
+                break;
+            case "»":
+                el.addEventListener("click", moveToLastPage);
+                break;
+        };
+    });
+    // Navbar burger event handler setting
     const navbarBurger = document.querySelector(".navbar-burger");
     navbarBurger.addEventListener("click", () => {
         const target = document.getElementById(navbarBurger.dataset.target);
@@ -47,6 +130,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
+/* 
+    Subroutines related to main algorithm
+ */
 
 // Function loads all saved data from localStorage
 function getData() {
@@ -62,37 +149,6 @@ function saveData() {
     localStorage.setItem("localDB", JSON.stringify(localDB));
 
 };
-
-
-// On first start (reload) page loading subroutine
-function loadData() {
-
-    getData();
-    // No need to load anything if there is no data
-    if (localDB.length) {
-        const groupsPanel = document.getElementById("groups-panel");
-        const groupsCount = document.getElementById("groups-count");
-        const activeGroup = getActiveGroup();
-        const renderGroups = localDB.reduce((result, current) => {
-            result += `<a id="${current.uuid}" class="panel-block is-radiusless">${current.name}</a>`;
-            return result;
-        }, "");
-        groupsPanel.insertAdjacentHTML("beforeend", renderGroups);
-        drawActiveGroup(activeGroup.uuid);
-        groupsCount.textContent = localDB.length;
-        // Groups event handlers
-        localDB.forEach(el => {
-            document.getElementById(el.uuid).addEventListener("click", () => {
-                toggleActiveGroup(el.uuid);
-            });
-        });
-        // Tasks of active group are loaded if there is any
-        if (activeGroup.tasks.length) {
-            changePage();
-        };
-    };
-
-}
 
 
 /* 
@@ -395,58 +451,6 @@ function updateTasksList() {
 /* 
     Subroutines related to event handling
  */
-
-// Menu items event handlers with associated functions
-function setMenuItemsEventListeners() {
-
-    const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
-    menuItems.forEach(el => {
-        const menuText = el.textContent;
-        switch (menuText) {
-            case "Add new group":
-                el.addEventListener("click", addGroup);
-                break;
-            case "Edit current group":
-                el.addEventListener("click", editGroup);
-                break;
-            case "Delete current group":
-                el.addEventListener("click", deleteGroup);
-                break;
-            case "Clear all groups":
-                el.addEventListener("click", clearGroups);
-                break;
-            case "Add new task":
-                el.addEventListener("click", addTask);
-                break;
-            case "Edit current task":
-                el.addEventListener("click", editTask);
-                break;
-            case "Delete current task":
-                el.addEventListener("click", deleteTask);
-                break;
-            case "Clear all tasks":
-                el.addEventListener("click", clearTasks);
-                break;
-            case "About":
-                el.addEventListener("click", showAbout);
-                break;
-            case "«":
-                el.addEventListener("click", moveToFirstPage);
-                break;
-            case "‹":
-                el.addEventListener("click", moveToPreviousPage);
-                break;
-            case "›":
-                el.addEventListener("click", moveToNextPage);
-                break;
-            case "»":
-                el.addEventListener("click", moveToLastPage);
-                break;
-        };
-    });
-
-};
-
 
 // Function adds new group
 function addGroup() {
