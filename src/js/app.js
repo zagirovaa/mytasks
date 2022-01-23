@@ -3,10 +3,6 @@ import GroupModal from "../components/GroupModal.js";
 import TaskModal from "../components/TaskModal.js";
 
 
-/* 
-    Service Worker registration block
- */
-
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
         if(reg.installing) {
@@ -21,10 +17,6 @@ if ("serviceWorker" in navigator) {
     });
 };
 
-
-/* 
-    Initialization block
- */
 
 let localDB = [];
 let pagesCount = 0;
@@ -44,12 +36,7 @@ const modalMode = {
 };
 
 
-/* 
-    Main algorithm
- */
-
 getData();
-// No need to load anything if there is no data
 if (localDB.length) {
     const groupsPanel = document.getElementById("groups-panel");
     const groupsCount = document.getElementById("groups-count");
@@ -61,21 +48,18 @@ if (localDB.length) {
     groupsPanel.insertAdjacentHTML("beforeend", renderGroups);
     drawActiveGroup(activeGroup.uuid);
     groupsCount.textContent = localDB.length;
-    // Groups event handlers
     localDB.forEach(el => {
         document.getElementById(el.uuid).addEventListener("click", () => {
             toggleActiveGroup(el.uuid);
         });
     });
-    // Tasks of active group are loaded if there is any
     if (activeGroup.tasks.length) {
         changePage();
     };
 };
 
-// Settting event hadlers after main page load
+
 document.addEventListener("DOMContentLoaded", () => {
-    // Main menu event hadlers
     const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
     menuItems.forEach(el => {
         const menuText = el.textContent;
@@ -121,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
         };
     });
-    // Navbar burger event handler setting
     const navbarBurger = document.querySelector(".navbar-burger");
     navbarBurger.addEventListener("click", () => {
         const target = document.getElementById(navbarBurger.dataset.target);
@@ -131,11 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* 
-    Subroutines related to main algorithm
- */
-
-// Function loads all saved data from localStorage
 function getData() {
 
     localDB = JSON.parse(localStorage.getItem("localDB")) || [];
@@ -143,7 +121,6 @@ function getData() {
 };
 
 
-// Function saves all data to localStorage
 function saveData() {
 
     localStorage.setItem("localDB", JSON.stringify(localDB));
@@ -151,11 +128,6 @@ function saveData() {
 };
 
 
-/* 
-    Subroutines related to groups
- */
-
-// Checks whether group with a given name already exists
 function groupExists(name) {
 
     if (localDB.length) {
@@ -170,7 +142,6 @@ function groupExists(name) {
 }
 
 
-// Returnes a group that is active
 function getActiveGroup() {
 
     if (localDB.length) {
@@ -185,7 +156,6 @@ function getActiveGroup() {
 }
 
 
-// Returns an index of active group
 function getGroupIndex(uuid) {
 
     if (localDB.length) {
@@ -200,7 +170,6 @@ function getGroupIndex(uuid) {
 }
 
 
-// Changes background of group element with a given uuid to be active
 function drawActiveGroup(uuid) {
 
     const activeGroup = document.getElementById(uuid) || null;
@@ -211,7 +180,6 @@ function drawActiveGroup(uuid) {
 }
 
 
-// Changes background of group element with a given uuid to be inactive
 function drawInActiveGroup() {
 
     const activeGroup = document.getElementById(getActiveGroup().uuid) || null;
@@ -222,7 +190,6 @@ function drawInActiveGroup() {
 }
 
 
-// Changes current active group to the one with the given uuid
 function makeGroupActive(uuid) {
 
     localDB[getGroupIndex(getActiveGroup().uuid)].active = false;
@@ -231,7 +198,6 @@ function makeGroupActive(uuid) {
 };
 
 
-// Toggles active group
 function toggleActiveGroup(uuid) {
 
     currentPage = 0;
@@ -245,7 +211,6 @@ function toggleActiveGroup(uuid) {
 }
 
 
-// Clears the contents of panel with group elements
 function clearGroupsPanel() {
 
     const panel = document.querySelector("#groups-panel .panel-heading");
@@ -258,11 +223,6 @@ function clearGroupsPanel() {
 }
 
 
-/* 
-    Subroutines related to tasks
- */
-
-// Returnes a task that is active
 function getActiveTask() {
 
     const activeGroup = getActiveGroup();
@@ -278,7 +238,6 @@ function getActiveTask() {
 }
 
 
-// Returns an index of active task
 function getTaskIndex(uuid) {
 
     const activeGroup = getActiveGroup();
@@ -294,7 +253,6 @@ function getTaskIndex(uuid) {
 }
 
 
-// Changes background of task element with a given uuid to be active
 function drawActiveTask(uuid) {
 
     const activeTask = document.getElementById(uuid);
@@ -311,7 +269,6 @@ function drawActiveTask(uuid) {
 }
 
 
-// Changes background of task element with a given uuid to be inactive
 function drawInActiveTask() {
 
     const activeTask = getActiveTask();
@@ -331,7 +288,6 @@ function drawInActiveTask() {
 }
 
 
-// Changes current active task to the one with the given uuid
 function makeTaskActive(uuid) {
 
     const activeGroup = getActiveGroup();
@@ -341,7 +297,6 @@ function makeTaskActive(uuid) {
 }
 
 
-// Toggles active task
 function toggleActiveTask(uuid) {
     
     drawInActiveTask();
@@ -365,7 +320,7 @@ function clearTasksPanel() {
 }
 
 
-// 
+// Returns tasks of the current active page
 function getCurrentPageTasks() {
 
     const activeGroup = getActiveGroup();
@@ -389,7 +344,6 @@ function getCurrentPageTasks() {
 }
 
 
-// 
 function changePage() {
 
     const outputList = getCurrentPageTasks();
@@ -399,7 +353,7 @@ function changePage() {
 }
 
 
-// 
+// Updates tasks panel according to the current page
 function updateTasksList() {
 
     const activeGroup = getActiveGroup();
@@ -448,11 +402,6 @@ function updateTasksList() {
 }
 
 
-/* 
-    Subroutines related to event handling
- */
-
-// Function adds new group
 function addGroup() {
 
     const groupModal = new GroupModal(modalMode.add, localDB);
@@ -461,7 +410,6 @@ function addGroup() {
 };
 
 
-// Function edits active group
 function editGroup() {
 
     if (getActiveGroup()) {
@@ -472,7 +420,6 @@ function editGroup() {
 };
 
 
-// Function deletes active group
 function deleteGroup() {
 
     if (getActiveGroup()) {
@@ -496,7 +443,6 @@ function deleteGroup() {
 };
 
 
-// Function removes all groups
 function clearGroups() {
 
     if (localDB.length) {
@@ -513,7 +459,6 @@ function clearGroups() {
 };
 
 
-// Function adds new task to the active group
 function addTask() {
 
     const taskModal = new TaskModal(modalMode.add);
@@ -522,7 +467,6 @@ function addTask() {
 };
 
 
-// Function edits active task in the active group
 function editTask() {
 
     if (getActiveTask()) {
@@ -533,7 +477,6 @@ function editTask() {
 };
 
 
-// Function removes active task from the active group
 function deleteTask() {
 
     const activeGroup = getActiveGroup();
@@ -558,7 +501,6 @@ function deleteTask() {
 };
 
 
-// Function removes all tasks from the active group
 function clearTasks() {
 
     const activeGroup = getActiveGroup();
@@ -575,7 +517,6 @@ function clearTasks() {
 };
 
 
-// Function shows a dialog about the app
 function showAbout() {
 
     const aboutModal = new AboutModal(helpContext);
@@ -584,7 +525,6 @@ function showAbout() {
 };
 
 
-// Function moves to the first page
 function moveToFirstPage() {
 
     if (pagesCount > 0) {
@@ -595,7 +535,6 @@ function moveToFirstPage() {
 };
 
 
-// Function moves to the previous page
 function moveToPreviousPage() {
 
     if (currentPage > 1) {
@@ -606,7 +545,6 @@ function moveToPreviousPage() {
 };
 
 
-// Function moves to the next page
 function moveToNextPage() {
 
     if (currentPage < pagesCount) {
@@ -617,7 +555,6 @@ function moveToNextPage() {
 };
 
 
-// Function moves to the last page
 function moveToLastPage() {
 
     if (pagesCount > 0) {
@@ -628,7 +565,6 @@ function moveToLastPage() {
 };
 
 
-// Export block
 export {
     saveData, 
     getActiveGroup, 
