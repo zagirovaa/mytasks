@@ -315,8 +315,12 @@ function getCurrentPageTasks() {
     const activeGroup = getActiveGroup();
     if (activeGroup.tasks.length <= TASKS_PER_PAGE) {
         pagesCount = 1;
+        currentPage = 1;
     } else {
         pagesCount = Math.ceil(activeGroup.tasks.length / TASKS_PER_PAGE);
+        if (currentPage > pagesCount) {
+            currentPage = pagesCount;
+        };
     };
     if (currentPage == 0) {
         currentPage = 1;
@@ -532,7 +536,7 @@ function deleteTask() {
     if (activeGroup && activeGroup.tasks.length) {
         const activeTaskID = getActiveTask().uuid;
         const currentActiveIndex = getTaskIndex(activeTaskID);
-        const taskCount = document.getElementById("tasks-count");
+        const tasksCount = document.getElementById("tasks-count");
         if (activeGroup.tasks.length > 1) {
             if (activeGroup.tasks[currentActiveIndex - 1]) {
                 makeTaskActive(activeGroup.tasks[currentActiveIndex - 1].uuid);
@@ -543,7 +547,7 @@ function deleteTask() {
         activeGroup.tasks.splice(currentActiveIndex, 1);
         saveData();
         document.getElementById(activeTaskID).remove();
-        taskCount.textContent = activeGroup.tasks.length;
+        tasksCount.textContent = activeGroup.tasks.length;
         updateTasksList();
     };
 
