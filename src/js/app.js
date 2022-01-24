@@ -39,6 +39,7 @@ const modalMode = {
 getData();
 if (localDB.length) {
     const groupsPanel = document.getElementById("groups-panel");
+    const tasksPanel = document.getElementById("tasks-panel");
     const groupsCount = document.getElementById("groups-count");
     const activeGroup = getActiveGroup();
     const renderGroups = localDB.reduce((result, current) => {
@@ -56,6 +57,8 @@ if (localDB.length) {
     if (activeGroup.tasks.length) {
         changePage();
     };
+    groupsPanel.addEventListener("click", toggleGroupsPanel);
+    tasksPanel.addEventListener("click", toggleTasksPanel);
 };
 
 
@@ -211,6 +214,22 @@ function toggleActiveGroup(uuid) {
 }
 
 
+function toggleGroupsPanel() {
+
+    const groups = Array.from(document.querySelectorAll("#groups-panel a"));
+    if (groups.length) {
+        for (let group of groups) {
+            if (group.style.display == "block" || group.style.display == "") {
+                group.style.display = "none";
+            } else {
+                group.style.display = "block";
+            };
+        };
+    };
+
+}
+
+
 function clearGroupsPanel() {
 
     const panel = document.querySelector("#groups-panel .panel-heading");
@@ -307,7 +326,22 @@ function toggleActiveTask(uuid) {
 }
 
 
-// Clears the contents of panel with task elements
+function toggleTasksPanel() {
+
+    const tasks = Array.from(document.querySelectorAll("#tasks-panel a"));
+    if (tasks.length) {
+        for (let task of tasks) {
+            if (task.style.display == "block" || task.style.display == "") {
+                task.style.display = "none";
+            } else {
+                task.style.display = "block";
+            };
+        };
+    };
+
+}
+
+
 function clearTasksPanel() {
 
     const panel = document.querySelector("#tasks-panel .panel-heading");
@@ -320,7 +354,6 @@ function clearTasksPanel() {
 }
 
 
-// Returns tasks of the current active page
 function getCurrentPageTasks() {
 
     const activeGroup = getActiveGroup();
@@ -353,7 +386,6 @@ function changePage() {
 }
 
 
-// Updates tasks panel according to the current page
 function updateTasksList() {
 
     const activeGroup = getActiveGroup();
