@@ -50,15 +50,16 @@ if (localDB.length) {
     drawActiveGroup(activeGroup.uuid);
     groupsCount.textContent = localDB.length;
     localDB.forEach(el => {
-        document.getElementById(el.uuid).addEventListener("click", () => {
+        document.getElementById(el.uuid).addEventListener("click", group => {
+            group.stopPropagation();
             toggleActiveGroup(el.uuid);
-        });
+        }, false);
     });
     if (activeGroup.tasks.length) {
         changePage();
     };
-    groupsPanel.addEventListener("click", toggleGroupsPanel);
-    tasksPanel.addEventListener("click", toggleTasksPanel);
+    groupsPanel.addEventListener("click", toggleGroupsPanel, false);
+    tasksPanel.addEventListener("click", toggleTasksPanel, false);
 };
 
 
@@ -420,7 +421,8 @@ function updateTasksList() {
             toggleActiveTask(outputList[0].uuid);
             tasksCount.textContent = activeGroup.tasks.length;
             outputList.forEach(el => {
-                document.getElementById(el.uuid).addEventListener("click", () => {
+                document.getElementById(el.uuid).addEventListener("click", task => {
+                    task.stopPropagation();
                     toggleActiveTask(el.uuid);
                 });
             });
