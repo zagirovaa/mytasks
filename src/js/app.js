@@ -1,6 +1,7 @@
 import AboutModal from "../components/AboutModal.js";
 import GroupModal from "../components/GroupModal.js";
 import TaskModal from "../components/TaskModal.js";
+import SettingsModal from "../components/SettingsModal.js";
 
 
 if ("serviceWorker" in navigator) {
@@ -19,9 +20,11 @@ if ("serviceWorker" in navigator) {
 
 
 let localDB = [];
-let pagesCount = 0;
-let currentPage = 0;
-const TASKS_PER_PAGE = 5;
+const settings = {
+    "pagesCount": 0,
+    "currentPage": 0,
+    "tasksPerPage": 5
+};
 
 const helpContext = {
     "title": "About",
@@ -69,43 +72,46 @@ document.addEventListener("DOMContentLoaded", () => {
         const menuText = el.textContent;
         switch (menuText) {
             case "Add new group":
-                el.addEventListener("click", addGroup);
+                el.addEventListener("click", addGroup, false);
                 break;
             case "Edit current group":
-                el.addEventListener("click", editGroup);
+                el.addEventListener("click", editGroup, false);
                 break;
             case "Delete current group":
-                el.addEventListener("click", deleteGroup);
+                el.addEventListener("click", deleteGroup, false);
                 break;
             case "Clear all groups":
-                el.addEventListener("click", clearGroups);
+                el.addEventListener("click", clearGroups, false);
                 break;
             case "Add new task":
-                el.addEventListener("click", addTask);
+                el.addEventListener("click", addTask, false);
                 break;
             case "Edit current task":
-                el.addEventListener("click", editTask);
+                el.addEventListener("click", editTask, false);
                 break;
             case "Delete current task":
-                el.addEventListener("click", deleteTask);
+                el.addEventListener("click", deleteTask, false);
                 break;
             case "Clear all tasks":
-                el.addEventListener("click", clearTasks);
+                el.addEventListener("click", clearTasks, false);
+                break;
+            case "Settings":
+                el.addEventListener("click", showSettings, false);
                 break;
             case "About":
-                el.addEventListener("click", showAbout);
+                el.addEventListener("click", showAbout, false);
                 break;
             case "«":
-                el.addEventListener("click", moveToFirstPage);
+                el.addEventListener("click", moveToFirstPage, false);
                 break;
             case "‹":
-                el.addEventListener("click", moveToPreviousPage);
+                el.addEventListener("click", moveToPreviousPage, false);
                 break;
             case "›":
-                el.addEventListener("click", moveToNextPage);
+                el.addEventListener("click", moveToNextPage, false);
                 break;
             case "»":
-                el.addEventListener("click", moveToLastPage);
+                el.addEventListener("click", moveToLastPage, false);
                 break;
         };
     });
@@ -114,13 +120,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = document.getElementById(navbarBurger.dataset.target);
         navbarBurger.classList.toggle("is-active");
         target.classList.toggle("is-active");
-    });
+    }, false);
 });
 
 
 function getData() {
 
     localDB = JSON.parse(localStorage.getItem("localDB")) || [];
+    settings.tasksPerPage = JSON.parse(localStorage.getItem("tasksPerPage")) || 0;
 
 };
 
@@ -128,6 +135,7 @@ function getData() {
 function saveData() {
 
     localStorage.setItem("localDB", JSON.stringify(localDB));
+    localStorage.setItem("tasksPerPage", JSON.stringify(settings.tasksPerPage));
 
 };
 
@@ -204,8 +212,8 @@ function makeGroupActive(uuid) {
 
 function toggleActiveGroup(uuid) {
 
-    currentPage = 0;
-    pagesCount = 0;
+    settings.currentPage = 0;
+    settings.pagesCount = 0;
     drawInActiveGroup();
     drawActiveGroup(uuid);
     makeGroupActive(uuid);
@@ -358,20 +366,20 @@ function clearTasksPanel() {
 function getCurrentPageTasks() {
 
     const activeGroup = getActiveGroup();
-    if (activeGroup.tasks.length <= TASKS_PER_PAGE) {
-        pagesCount = 1;
-        currentPage = 1;
+    if (activeGroup.tasks.length <= settings.tasksPerPage) {
+        settings.pagesCount = 1;
+        settings.currentPage = 1;
     } else {
-        pagesCount = Math.ceil(activeGroup.tasks.length / TASKS_PER_PAGE);
-        if (currentPage > pagesCount) {
-            currentPage = pagesCount;
+        settings.pagesCount = Math.ceil(activeGroup.tasks.length / settings.tasksPerPage);
+        if (settings.currentPage > settings.pagesCount) {
+            settings.currentPage = settings.pagesCount;
         };
     };
-    if (currentPage == 0) {
-        currentPage = 1;
+    if (settings.currentPage == 0) {
+        settings.currentPage = 1;
     };
-    const startItem = currentPage * TASKS_PER_PAGE - TASKS_PER_PAGE;
-    const endItem = startItem + TASKS_PER_PAGE;
+    const startItem = settings.currentPage * settings.tasksPerPage - settings.tasksPerPage;
+    const endItem = startItem + settings.tasksPerPage;
     const outputList = activeGroup.tasks.slice(startItem, endItem);
     return outputList;
 
@@ -424,13 +432,13 @@ function updateTasksList() {
                 document.getElementById(el.uuid).addEventListener("click", task => {
                     task.stopPropagation();
                     toggleActiveTask(el.uuid);
-                });
+                }, false);
             });
         } else {
-            currentPage = 0;
-            pagesCount = 0;
+            settings.currentPage = 0;
+            settings.pagesCount = 0;
         };
-        pagination.textContent = `${currentPage} of ${pagesCount}`;
+        pagination.textContent = `${settings.currentPage} of ${settings.pagesCount}`;
     };
 
 }
@@ -485,9 +493,9 @@ function clearGroups() {
         localDB = [];
         clearGroupsPanel();
         clearTasksPanel();
-        currentPage = 0;
-        pagesCount = 0;
-        pagination.textContent = `${currentPage} of ${pagesCount}`;
+        settings.currentPage = 0;
+        settings.pagesCount = 0;
+        pagination.textContent = `${settings.currentPage} of ${settings.pagesCount}`;
     };
 
 };
@@ -543,12 +551,20 @@ function clearTasks() {
         activeGroup.tasks.length = 0;
         saveData();
         clearTasksPanel();
-        currentPage = 0;
-        pagesCount = 0;
-        pagination.textContent = `${currentPage} of ${pagesCount}`;
+        settings.currentPage = 0;
+        settings.pagesCount = 0;
+        pagination.textContent = `${settings.currentPage} of ${settings.pagesCount}`;
     };
 
 };
+
+
+function showSettings() {
+
+    const settingsModal = new SettingsModal(settings);
+    settingsModal.show();
+
+}
 
 
 function showAbout() {
@@ -561,8 +577,8 @@ function showAbout() {
 
 function moveToFirstPage() {
 
-    if (pagesCount > 0) {
-        currentPage = 1;
+    if (settings.pagesCount > 0) {
+        settings.currentPage = 1;
         changePage();
     };
 
@@ -571,8 +587,8 @@ function moveToFirstPage() {
 
 function moveToPreviousPage() {
 
-    if (currentPage > 1) {
-        currentPage -= 1;
+    if (settings.currentPage > 1) {
+        settings.currentPage -= 1;
         changePage();
     };
 
@@ -581,8 +597,8 @@ function moveToPreviousPage() {
 
 function moveToNextPage() {
 
-    if (currentPage < pagesCount) {
-        currentPage += 1;
+    if (settings.currentPage < settings.pagesCount) {
+        settings.currentPage += 1;
         changePage();
     };
 
@@ -591,8 +607,8 @@ function moveToNextPage() {
 
 function moveToLastPage() {
 
-    if (pagesCount > 0) {
-        currentPage = pagesCount;
+    if (settings.pagesCount > 0) {
+        settings.currentPage = settings.pagesCount;
         changePage();
     };
 
@@ -601,6 +617,7 @@ function moveToLastPage() {
 
 export {
     saveData, 
+    changePage, 
     getActiveGroup, 
     groupExists, 
     getGroupIndex, 
