@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function getData() {
     localDB = JSON.parse(localStorage.getItem("localDB")) || [];
     const tasksPerPage = JSON.parse(localStorage.getItem("tasksPerPage")) || 0;
-    if (tasksPerPage) {
+    if (tasksPerPage > 0) {
         settings.tasksPerPage = tasksPerPage;
     }
 }
@@ -158,7 +158,9 @@ function getActiveGroup() {
 
 function getGroupIndex(uuid) {
     for (let index = 0; index < localDB.length; index++) {
-        if (localDB[index].uuid === uuid) return index;
+        if (localDB[index].uuid === uuid) {
+            return index;
+        }
     }
     return -1;
 }
@@ -218,7 +220,9 @@ function getActiveTask() {
     const activeGroup = getActiveGroup();
     if (activeGroup && activeGroup.tasks.length > 0) {
         for (const task of activeGroup.tasks) {
-            if (task.active) return task;
+            if (task.active) {
+                return task;
+            }
         }
     }
     return false;
@@ -228,7 +232,9 @@ function getTaskIndex(uuid) {
     const activeGroup = getActiveGroup();
     if (activeGroup && activeGroup.tasks.length > 0) {
         for (let index = 0; index < activeGroup.tasks.length; index++) {
-            if (activeGroup.tasks[index].uuid === uuid) return index;
+            if (activeGroup.tasks[index].uuid === uuid) {
+                return index;
+            }
         }
     }
     return -1;
@@ -401,7 +407,9 @@ function addGroup() {
 }
 
 function editGroup() {
-    if (getActiveGroup()) new GroupModal(modalMode.edit, localDB).show();
+    if (getActiveGroup()) {
+        new GroupModal(modalMode.edit, localDB).show();
+    }
 }
 
 function deleteGroup() {
@@ -440,11 +448,15 @@ function clearGroups() {
 }
 
 function addTask() {
-    if (getActiveGroup()) new TaskModal(modalMode.add).show();
+    if (getActiveGroup()) {
+        new TaskModal(modalMode.add).show();
+    }
 }
 
 function editTask() {
-    if (getActiveTask()) new TaskModal(modalMode.edit).show();
+    if (getActiveTask()) {
+        new TaskModal(modalMode.edit).show();
+    }
 }
 
 function deleteTask() {
