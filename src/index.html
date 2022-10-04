@@ -5,23 +5,51 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="#3367D6">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="manifest" href="manifest.json">
-        <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
-        <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+        <link
+            rel="stylesheet"
+            href="css/style.css">
+        <link
+            rel="manifest"
+            href="manifest.json">
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="assets/images/apple-touch-icon.png">
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="assets/images/favicon-32x32.png">
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="assets/images/favicon-16x16.png">
+        <link
+            rel="shortcut icon"
+            type="image/x-icon"
+            href="assets/images/favicon.ico">
         <title>MyTasks</title>
     </head>
     <body>
         <div id="app">
-            <nav class="navbar is-fixed-top is-info" role="navigation" aria-label="main navigation">
+            <nav
+                class="navbar is-fixed-top is-info"
+                role="navigation"
+                aria-label="main navigation">
                 <div class="navbar-brand">
                     <a class="navbar-item">
                         <h4 class="has-text-weight-bold is-size-4">MyTasks</h4>
                     </a>
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+                    <a
+                        role="button"
+                        class="navbar-burger"
+                        aria-label="menu"
+                        aria-expanded="false"
+                        data-target="navbarMain">
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
@@ -55,18 +83,29 @@
                     <div class="navbar-end is-flex is-align-items-center">
                         <a class="navbar-item">&#171;</a>
                         <a class="navbar-item">&#8249;</a>
-                        <span id="pagination" class="tag has-text-white has-background-info is-medium">0 of 0</span>
+                        <span
+                            id="pagination"
+                            class="tag has-text-white
+                                has-background-info is-medium">
+                            0 of 0
+                        </span>
                         <a class="navbar-item">&#8250;</a>
                         <a class="navbar-item">&#187;</a>
                     </div>
                 </div>
             </nav>
             <div class="columns p-0 m-0">
-                <div class="column no-padding-right is-5-tablet is-4-desktop is-3-widescreen">
+                <div
+                    class="column no-padding-right is-5-tablet
+                        is-4-desktop is-3-widescreen">
                     <nav id="groups-panel" class="panel is-shadowless">
                         <p class="panel-heading is-radiusless">
                             Groups
-                            <span id="groups-count" class="tag is-dark is-pulled-right">0</span>
+                            <span
+                                id="groups-count"
+                                class="tag is-dark is-pulled-right">
+                                0
+                            </span>
                         </p>
                     </nav>
                 </div>
@@ -74,7 +113,11 @@
                     <nav id="tasks-panel" class="panel is-shadowless">
                         <p class="panel-heading is-radiusless">
                             Tasks
-                            <span id="tasks-count" class="tag is-dark is-pulled-right">0</span>
+                            <span
+                                id="tasks-count"
+                                class="tag is-dark is-pulled-right">
+                                0
+                            </span>
                         </p>
                     </nav>
                 </div>

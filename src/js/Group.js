@@ -1,30 +1,38 @@
 export default class Group {
 
-    #uuid; #name; #tasks; #active;
+    #active; #name; #tasks; #uuid;
+
     constructor(name) {
-        this.#uuid = "group-" + crypto.randomUUID();
+        this.#active = false;
         this.#name = name;
         this.#tasks = [];
-        this.#active = false;
+        this.#uuid = "group-" + crypto.randomUUID();
     };
-    get uuid() {
-        return this.#uuid;
-    };
-    get name() {
-        return this.#name;
-    };
-    set name(name) {
-        this.#name = name;
-    };
+
     get active() {
         return this.#active;
     };
-    set active(condition) {
-        this.#active = condition;
+
+    set active(active) {
+        this.#active = active;
     };
+
+    get name() {
+        return this.#name;
+    };
+
+    set name(name) {
+        this.#name = name;
+    };
+
     get tasks() {
         return this.#tasks;
     };
+
+    get uuid() {
+        return this.#uuid;
+    };
+    
     toJSON() {
         return {
             "uuid": this.#uuid,

@@ -1,28 +1,38 @@
 export default class AboutModal {
 
-    #title; #name; #version; #developer;
+    #developer; #name; #title; #version;
     
-    constructor(context) {
-        this.#title = context.title;
-        this.#name = context.name,
-        this.#version = context.version;
-        this.#developer = context.developer;
-    };
-    show() {
-        document.getElementById("app").insertAdjacentHTML("beforeend", this.render());
-        document.getElementById("about-modal-close").addEventListener("click", this.close, false);
-    };
+    constructor(app) {
+        this.#developer = app.developer;
+        this.#name = app.name;
+        this.#title = app.title;
+        this.#version = app.version;
+    }
+
     close() {
         document.getElementById("about-modal").remove();
-    };
+    }
+
+    show() {
+        document.getElementById("app").insertAdjacentHTML(
+            "beforeend", this.render()
+        );
+        document.getElementById("about-modal-close").addEventListener(
+            "click", this.close
+        );
+    }
+
     render() {
         return `
             <div class="modal is-active" id="about-modal">
-                <div class="modal-background"></div>
                 <div class="modal-card">
                     <header class="modal-card-head">
                         <p class="modal-card-title">${this.#title}</p>
-                        <button class="delete" aria-label="close" id="about-modal-close"></button>
+                        <button
+                            class="delete"
+                            aria-label="close"
+                            id="about-modal-close">
+                        </button>
                     </header>
                     <section class="modal-card-body has-text-centered">
                         <h3 class="title is-3">${this.#name}</h3>
@@ -36,10 +46,9 @@ export default class AboutModal {
                             ${this.#developer}
                         </h6>
                     </section>
-                    <footer class="modal-card-foot"></footer>
                 </div>
             </div>
         `;
-    };
+    }
 
 }

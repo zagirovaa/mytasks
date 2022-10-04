@@ -1,25 +1,25 @@
 export default class Task {
 
-    #uuid; #title; #message; #created; #active;
+    #active; #created; #message; #title; #uuid;
     
     constructor(title, message) {
-        this.#uuid = "task-" + crypto.randomUUID();
-        this.#title = title;
-        this.#message = message;
-        this.#created = new Date().toLocaleString();
         this.#active = false;
-    };
-
-    get uuid() {
-        return this.#uuid;
-    };
-
-    get title() {
-        return this.#title;
-    };
-
-    set title(title) {
+        this.#created = new Date().toLocaleString();
+        this.#message = message;
         this.#title = title;
+        this.#uuid = "task-" + crypto.randomUUID();
+    };
+
+    get active() {
+        return this.#active;
+    };
+
+    set active(active) {
+        this.#active = active;
+    };
+
+    get created() {
+        return this.#created;
     };
 
     get message() {
@@ -30,16 +30,16 @@ export default class Task {
         this.#message = message;
     };
 
-    get created() {
-        return this.#created;
+    get title() {
+        return this.#title;
     };
 
-    get active() {
-        return this.#active;
+    set title(title) {
+        this.#title = title;
     };
 
-    set active(condition) {
-        this.#active = condition
+    get uuid() {
+        return this.#uuid;
     };
 
     toJSON() {

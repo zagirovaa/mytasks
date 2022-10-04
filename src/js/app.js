@@ -1,8 +1,7 @@
 import AboutModal from "../components/AboutModal.js";
 import GroupModal from "../components/GroupModal.js";
-import TaskModal from "../components/TaskModal.js";
 import SettingsModal from "../components/SettingsModal.js";
-
+import TaskModal from "../components/TaskModal.js";
 
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
@@ -12,14 +11,14 @@ if ("serviceWorker" in navigator) {
             console.log("Service worker installed");
         } else if (reg.active) {
             console.log("Service worker active");
-        };
+        }
     }).catch(function(error) {
         console.log("Registration failed with " + error);
     });
-};
-
+}
 
 let localDB = [];
+
 const settings = {
     "pagesCount": 0,
     "currentPage": 0,
@@ -38,33 +37,45 @@ const modalMode = {
     "edit": 1
 };
 
-
 getData();
-if (localDB.length) {
-    const groupsPanel = document.getElementById("groups-panel");
-    const tasksPanel = document.getElementById("tasks-panel");
+
+const groupsPanel = document.getElementById("groups-panel");
+const tasksPanel = document.getElementById("tasks-panel");
+groupsPanel.addEventListener("click", el => {
+    el.stopPropagation();
+    toggleGroupsPanel();
+});
+tasksPanel.addEventListener("click", el => {
+    el.stopPropagation();
+    toggleTasksPanel();
+});
+
+if (localDB.length > 0) {
     const groupsCount = document.getElementById("groups-count");
     const activeGroup = getActiveGroup();
     const renderGroups = localDB.reduce((result, current) => {
-        result += `<a id="${current.uuid}" class="panel-block is-radiusless">${current.name}</a>`;
+        result += `
+            <a
+                id="${current.uuid}"
+                class="panel-block is-radiusless">
+                ${current.name}
+            </a>
+        `;
         return result;
     }, "");
     groupsPanel.insertAdjacentHTML("beforeend", renderGroups);
     drawActiveGroup(activeGroup.uuid);
     groupsCount.textContent = localDB.length;
-    localDB.forEach(el => {
-        document.getElementById(el.uuid).addEventListener("click", group => {
-            group.stopPropagation();
-            toggleActiveGroup(el.uuid);
-        }, false);
+    localDB.forEach(group => {
+        document.getElementById(group.uuid).addEventListener("click", el => {
+            el.stopPropagation();
+            toggleActiveGroup(group.uuid);
+        });
     });
-    if (activeGroup.tasks.length) {
+    if (activeGroup.tasks.length > 0) {
         changePage();
-    };
-    groupsPanel.addEventListener("click", toggleGroupsPanel, false);
-    tasksPanel.addEventListener("click", toggleTasksPanel, false);
-};
-
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
@@ -72,149 +83,106 @@ document.addEventListener("DOMContentLoaded", () => {
         const menuText = el.textContent;
         switch (menuText) {
             case "Add new group":
-                el.addEventListener("click", addGroup, false);
+                el.addEventListener("click", addGroup);
                 break;
             case "Edit current group":
-                el.addEventListener("click", editGroup, false);
+                el.addEventListener("click", editGroup);
                 break;
             case "Delete current group":
-                el.addEventListener("click", deleteGroup, false);
+                el.addEventListener("click", deleteGroup);
                 break;
             case "Clear all groups":
-                el.addEventListener("click", clearGroups, false);
+                el.addEventListener("click", clearGroups);
                 break;
             case "Add new task":
-                el.addEventListener("click", addTask, false);
+                el.addEventListener("click", addTask);
                 break;
             case "Edit current task":
-                el.addEventListener("click", editTask, false);
+                el.addEventListener("click", editTask);
                 break;
             case "Delete current task":
-                el.addEventListener("click", deleteTask, false);
+                el.addEventListener("click", deleteTask);
                 break;
             case "Clear all tasks":
-                el.addEventListener("click", clearTasks, false);
+                el.addEventListener("click", clearTasks);
                 break;
             case "Settings":
-                el.addEventListener("click", showSettings, false);
+                el.addEventListener("click", showSettings);
                 break;
             case "About":
-                el.addEventListener("click", showAbout, false);
+                el.addEventListener("click", showAbout);
                 break;
             case "«":
-                el.addEventListener("click", moveToFirstPage, false);
+                el.addEventListener("click", moveToFirstPage);
                 break;
             case "‹":
-                el.addEventListener("click", moveToPreviousPage, false);
+                el.addEventListener("click", moveToPreviousPage);
                 break;
             case "›":
-                el.addEventListener("click", moveToNextPage, false);
+                el.addEventListener("click", moveToNextPage);
                 break;
             case "»":
-                el.addEventListener("click", moveToLastPage, false);
+                el.addEventListener("click", moveToLastPage);
                 break;
-        };
+        }
     });
     const navbarBurger = document.querySelector(".navbar-burger");
     navbarBurger.addEventListener("click", () => {
         const target = document.getElementById(navbarBurger.dataset.target);
         navbarBurger.classList.toggle("is-active");
         target.classList.toggle("is-active");
-    }, false);
+    });
 });
 
-
 function getData() {
-
     localDB = JSON.parse(localStorage.getItem("localDB")) || [];
     const tasksPerPage = JSON.parse(localStorage.getItem("tasksPerPage")) || 0;
     if (tasksPerPage) {
         settings.tasksPerPage = tasksPerPage;
-    };
-
-};
-
+    }
+}
 
 function saveData() {
-
     localStorage.setItem("localDB", JSON.stringify(localDB));
     localStorage.setItem("tasksPerPage", JSON.stringify(settings.tasksPerPage));
-
-};
-
+}
 
 function groupExists(name) {
-
-    if (localDB.length) {
-        for (const group of localDB) {
-            if (group.name === name) {
-                return true;
-            };
-        };
-    };
-    return false;
-
+    return localDB.filter(group => group.name === name).length > 0 ? true : false;
 }
-
 
 function getActiveGroup() {
-
-    if (localDB.length) {
-        for (let group of localDB) {
-            if (group.active) {
-                return group;
-            };
-        };
-    };
-    return false;
-
+    const activeGroup = localDB.filter(group => group.active);
+    return activeGroup.length > 0 ? activeGroup[0] : false;
 }
-
 
 function getGroupIndex(uuid) {
-
-    if (localDB.length) {
-        for (let group = 0; group < localDB.length; group++) {
-            if (localDB[group].uuid === uuid) {
-                return group;
-            };
-        };
-    };
+    for (let index = 0; index < localDB.length; index++) {
+        if (localDB[index].uuid === uuid) return index;
+    }
     return -1;
-
 }
 
-
 function drawActiveGroup(uuid) {
-
     const activeGroup = document.getElementById(uuid) || null;
     if (activeGroup) {
         activeGroup.classList.add("has-background-info", "has-text-white");
-    };
-
+    }
 }
 
-
 function drawInActiveGroup() {
-
     const activeGroup = document.getElementById(getActiveGroup().uuid) || null;
     if (activeGroup) {
         activeGroup.classList.remove("has-background-info", "has-text-white");
-    };
-
+    }
 }
 
-
 function makeGroupActive(uuid) {
-
     localDB[getGroupIndex(getActiveGroup().uuid)].active = false;
     localDB[getGroupIndex(uuid)].active = true;
-
-};
-
+}
 
 function toggleActiveGroup(uuid) {
-
     settings.currentPage = 0;
     settings.pagesCount = 0;
     drawInActiveGroup();
@@ -222,202 +190,180 @@ function toggleActiveGroup(uuid) {
     makeGroupActive(uuid);
     updateTasksList();
     saveData();
-
 }
-
 
 function toggleGroupsPanel() {
-
     const groups = Array.from(document.querySelectorAll("#groups-panel a"));
-    if (groups.length) {
-        for (let group of groups) {
-            if (group.style.display == "block" || group.style.display == "") {
-                group.style.display = "none";
-            } else {
-                group.style.display = "block";
-            };
-        };
-    };
-
+    groups.forEach(group => {
+        if (group.style.display == "block" || group.style.display == "") {
+            group.style.display = "none";
+        } else {
+            group.style.display = "block";
+        }
+    });
 }
 
-
 function clearGroupsPanel() {
-
     const panel = document.querySelector("#groups-panel .panel-heading");
-    const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
+    const allSiblings = [
+        ...panel.parentElement.children
+    ].filter(child => child !== panel);
     allSiblings.forEach(el => {
         el.remove();
     });
     document.getElementById("groups-count").textContent = "0";
-
 }
-
 
 function getActiveTask() {
-
     const activeGroup = getActiveGroup();
-    if (activeGroup && activeGroup.tasks.length) {
-        for (let task of activeGroup.tasks) {
-            if (task.active) {
-                return task;
-            };
-        };
-    };
+    if (activeGroup && activeGroup.tasks.length > 0) {
+        for (const task of activeGroup.tasks) {
+            if (task.active) return task;
+        }
+    }
     return false;
-
 }
-
 
 function getTaskIndex(uuid) {
-
     const activeGroup = getActiveGroup();
-    if (activeGroup.tasks.length) {
-        for (let task = 0; task < activeGroup.tasks.length; task++) {
-            if (activeGroup.tasks[task].uuid === uuid) {
-                return task;
-            };
-        };
-    };
+    if (activeGroup && activeGroup.tasks.length > 0) {
+        for (let index = 0; index < activeGroup.tasks.length; index++) {
+            if (activeGroup.tasks[index].uuid === uuid) return index;
+        }
+    }
     return -1;
-
 }
-
 
 function drawActiveTask(uuid) {
-
     const activeTask = document.getElementById(uuid);
     const cardContent = document.querySelector(`#${uuid} .card-content`);
-    const title = document.querySelector(`#${uuid} .title`);
-    const subtitle = document.querySelector(`#${uuid} .subtitle`);
-    const content = document.querySelector(`#${uuid} .content`);
+    const taskTitle = document.querySelector(`#${uuid} .title`);
+    const taskSubtitle = document.querySelector(`#${uuid} .subtitle`);
+    const taskContent = document.querySelector(`#${uuid} .content`);
     activeTask.classList.add("has-background-info");
     cardContent.classList.add("has-background-info");
-    title.classList.add("has-text-white");
-    subtitle.classList.add("has-text-white");
-    content.classList.add("has-text-white");
-
+    taskTitle.classList.add("has-text-white");
+    taskSubtitle.classList.add("has-text-white");
+    taskContent.classList.add("has-text-white");
 }
-
 
 function drawInActiveTask() {
-
     const activeTask = getActiveTask();
-    const activeTaskBlock = document.getElementById(activeTask.uuid) || null;
-    if (activeTaskBlock) {
-        const cardContent = document.querySelector(`#${activeTask.uuid} .card-content`);
-        const title = document.querySelector(`#${activeTask.uuid} .title`);
-        const subtitle = document.querySelector(`#${activeTask.uuid} .subtitle`);
-        const content = document.querySelector(`#${activeTask.uuid} .content`);
-        activeTaskBlock.classList.remove("has-background-info");
+    const activeTaskElement = document.getElementById(activeTask.uuid) || null;
+    if (activeTaskElement) {
+        const cardContent = document.querySelector(
+            `#${activeTask.uuid} .card-content`
+        );
+        const taskTitle = document.querySelector(
+            `#${activeTask.uuid} .title`
+        );
+        const taskSubtitle = document.querySelector(
+            `#${activeTask.uuid} .subtitle`
+        );
+        const taskContent = document.querySelector(
+            `#${activeTask.uuid} .content`
+        );
+        activeTaskElement.classList.remove("has-background-info");
         cardContent.classList.remove("has-background-info");
-        title.classList.remove("has-text-white");
-        subtitle.classList.remove("has-text-white");
-        content.classList.remove("has-text-white");
-    };
-
+        taskTitle.classList.remove("has-text-white");
+        taskSubtitle.classList.remove("has-text-white");
+        taskContent.classList.remove("has-text-white");
+    }
 }
 
-
 function makeTaskActive(uuid) {
-
     const activeGroup = getActiveGroup();
     activeGroup.tasks[getTaskIndex(getActiveTask().uuid)].active = false;
     activeGroup.tasks[getTaskIndex(uuid)].active = true;
-
 }
 
-
 function toggleActiveTask(uuid) {
-    
     drawInActiveTask();
     drawActiveTask(uuid);
     makeTaskActive(uuid);
     saveData();
-
 }
-
 
 function toggleTasksPanel() {
-
     const tasks = Array.from(document.querySelectorAll("#tasks-panel a"));
-    if (tasks.length) {
-        for (let task of tasks) {
-            if (task.style.display == "block" || task.style.display == "") {
-                task.style.display = "none";
-            } else {
-                task.style.display = "block";
-            };
-        };
-    };
-
+    tasks.forEach(task => {
+        if (task.style.display == "block" || task.style.display == "") {
+            task.style.display = "none";
+        } else {
+            task.style.display = "block";
+        }
+    });
 }
 
-
 function clearTasksPanel() {
-
     const panel = document.querySelector("#tasks-panel .panel-heading");
-    const allSiblings = [...panel.parentElement.children].filter(child => child !== panel);
+    const allSiblings = [
+        ...panel.parentElement.children
+    ].filter(child => child !== panel);
     allSiblings.forEach(el => {
         el.remove();
     });
     document.getElementById("tasks-count").textContent = "0";
-
 }
-
 
 function getCurrentPageTasks() {
-
     const activeGroup = getActiveGroup();
-    if (activeGroup.tasks.length <= settings.tasksPerPage) {
-        settings.pagesCount = 1;
-        settings.currentPage = 1;
-    } else {
-        settings.pagesCount = Math.ceil(activeGroup.tasks.length / settings.tasksPerPage);
-        if (settings.currentPage > settings.pagesCount) {
-            settings.currentPage = settings.pagesCount;
-        };
-    };
-    if (settings.currentPage == 0) {
-        settings.currentPage = 1;
-    };
-    const startItem = settings.currentPage * settings.tasksPerPage - settings.tasksPerPage;
-    const endItem = startItem + settings.tasksPerPage;
-    const outputList = activeGroup.tasks.slice(startItem, endItem);
-    return outputList;
-
+    if (activeGroup) {
+        if (activeGroup.tasks.length <= settings.tasksPerPage) {
+            settings.pagesCount = 1;
+            settings.currentPage = 1;
+        } else {
+            settings.pagesCount = Math.ceil(
+                activeGroup.tasks.length / settings.tasksPerPage
+            );
+            if (settings.currentPage > settings.pagesCount) {
+                settings.currentPage = settings.pagesCount;
+            }
+        }
+        if (settings.currentPage === 0) {
+            settings.currentPage = 1;
+        }
+        const startItem = 
+            settings.currentPage * settings.tasksPerPage - settings.tasksPerPage;
+        const endItem = startItem + settings.tasksPerPage;
+        const pageTasks = activeGroup.tasks.slice(startItem, endItem);
+        return pageTasks;
+    }
 }
-
 
 function changePage() {
-
-    const outputList = getCurrentPageTasks();
-    makeTaskActive(outputList[0].uuid);
-    updateTasksList();
-
+    const pageTasks = getCurrentPageTasks();
+    if (pageTasks) {
+        makeTaskActive(pageTasks[0].uuid);
+        updateTasksList();
+    }
 }
 
-
 function updateTasksList() {
-
     const activeGroup = getActiveGroup();
     const pagination = document.getElementById("pagination");
     if (activeGroup) {
         clearTasksPanel();
-        if (activeGroup.tasks.length) {
+        if (activeGroup.tasks.length > 0) {
             const tasksPanel = document.getElementById("tasks-panel");
             const tasksCount = document.getElementById("tasks-count");
-            const outputList = getCurrentPageTasks();
-            const renderTasks = outputList.reduce((result, current) => {
+            const pageTasks = getCurrentPageTasks();
+            const renderTasks = pageTasks.reduce((result, current) => {
                 result += `
                     <a id="${current.uuid}" class="panel-block is-radiusless">
                         <div class="card is-shadowless">
                             <div class="card-content is-radiusless">
                                 <div class="media">
                                     <div class="media-content">
-                                        <p class="title is-4">${current.title}</p>
+                                        <p
+                                            class="title is-4">
+                                            ${current.title}
+                                        </p>
                                         <p class="subtitle is-6">
-                                            <time datetime="${current.created}">${current.created}</time>
+                                            <time
+                                                datetime="${current.created}">
+                                                ${current.created}
+                                            </time>
                                         </p>
                                     </div>
                                 </div>
@@ -429,44 +375,36 @@ function updateTasksList() {
                 return result;
             }, "");
             tasksPanel.insertAdjacentHTML("beforeend", renderTasks);
-            toggleActiveTask(outputList[0].uuid);
+            toggleActiveTask(pageTasks[0].uuid);
             tasksCount.textContent = activeGroup.tasks.length;
-            outputList.forEach(el => {
-                document.getElementById(el.uuid).addEventListener("click", task => {
-                    task.stopPropagation();
-                    toggleActiveTask(el.uuid);
-                }, false);
+            pageTasks.forEach(task => {
+                document.getElementById(task.uuid).addEventListener(
+                    "click",
+                    el => {
+                        el.stopPropagation();
+                        toggleActiveTask(task.uuid);
+                    }
+                );
             });
         } else {
             settings.currentPage = 0;
             settings.pagesCount = 0;
-        };
-        pagination.textContent = `${settings.currentPage} of ${settings.pagesCount}`;
-    };
-
+        }
+        pagination.textContent = `
+            ${settings.currentPage} of ${settings.pagesCount}
+        `;
+    }
 }
 
-
 function addGroup() {
-
-    const groupModal = new GroupModal(modalMode.add, localDB);
-    groupModal.show();
-
-};
-
+    new GroupModal(modalMode.add, localDB).show();
+}
 
 function editGroup() {
-
-    if (getActiveGroup()) {
-        const groupModal = new GroupModal(modalMode.edit, localDB);
-        groupModal.show();
-    };
-
-};
-
+    if (getActiveGroup()) new GroupModal(modalMode.edit, localDB).show();
+}
 
 function deleteGroup() {
-
     if (getActiveGroup()) {
         const activeGroupID = getActiveGroup().uuid;
         const currentActiveIndex = getGroupIndex(activeGroupID);
@@ -476,21 +414,18 @@ function deleteGroup() {
                 toggleActiveGroup(localDB[currentActiveIndex - 1].uuid);
             } else {
                 toggleActiveGroup(localDB[currentActiveIndex + 1].uuid);
-            };
-        };
+            }
+        }
         localDB.splice(currentActiveIndex, 1);
         saveData();
         document.getElementById(activeGroupID).remove();
         groupCount.textContent = localDB.length;
         drawActiveGroup(getActiveGroup().uuid);
-    };
-
-};
-
+    }
+}
 
 function clearGroups() {
-
-    if (localDB.length) {
+    if (localDB.length > 0) {
         const pagination = document.getElementById("pagination");
         localStorage.clear();
         localDB = [];
@@ -498,34 +433,23 @@ function clearGroups() {
         clearTasksPanel();
         settings.currentPage = 0;
         settings.pagesCount = 0;
-        pagination.textContent = `${settings.currentPage} of ${settings.pagesCount}`;
-    };
-
-};
-
+        pagination.textContent = `
+            ${settings.currentPage} of ${settings.pagesCount}
+        `;
+    }
+}
 
 function addTask() {
-
-    const taskModal = new TaskModal(modalMode.add);
-    taskModal.show();
-
-};
-
+    if (getActiveGroup()) new TaskModal(modalMode.add).show();
+}
 
 function editTask() {
-
-    if (getActiveTask()) {
-        const taskModal = new TaskModal(modalMode.edit);
-        taskModal.show();
-    };
-
-};
-
+    if (getActiveTask()) new TaskModal(modalMode.edit).show();
+}
 
 function deleteTask() {
-
     const activeGroup = getActiveGroup();
-    if (activeGroup && activeGroup.tasks.length) {
+    if (activeGroup && activeGroup.tasks.length > 0) {
         const activeTaskID = getActiveTask().uuid;
         const currentActiveIndex = getTaskIndex(activeTaskID);
         const tasksCount = document.getElementById("tasks-count");
@@ -534,98 +458,76 @@ function deleteTask() {
                 makeTaskActive(activeGroup.tasks[currentActiveIndex - 1].uuid);
             } else {
                 makeTaskActive(activeGroup.tasks[currentActiveIndex + 1].uuid);
-            };
-        };
+            }
+        }
         activeGroup.tasks.splice(currentActiveIndex, 1);
         saveData();
         document.getElementById(activeTaskID).remove();
         tasksCount.textContent = activeGroup.tasks.length;
         updateTasksList();
-    };
-
-};
-
+    }
+}
 
 function clearTasks() {
-
     const activeGroup = getActiveGroup();
-    if (activeGroup && activeGroup.tasks.length) {
+    if (activeGroup && activeGroup.tasks.length > 0) {
         const pagination = document.getElementById("pagination");
         activeGroup.tasks.length = 0;
         saveData();
         clearTasksPanel();
         settings.currentPage = 0;
         settings.pagesCount = 0;
-        pagination.textContent = `${settings.currentPage} of ${settings.pagesCount}`;
-    };
-
-};
-
-
-function showSettings() {
-
-    const settingsModal = new SettingsModal(settings);
-    settingsModal.show();
-
+        pagination.textContent = `
+            ${settings.currentPage} of ${settings.pagesCount}
+        `;
+    }
 }
 
+function showSettings() {
+    new SettingsModal(settings).show();
+}
 
 function showAbout() {
-
-    const aboutModal = new AboutModal(helpContext);
-    aboutModal.show();
-    
-};
-
+    new AboutModal(helpContext).show();
+}
 
 function moveToFirstPage() {
-
     if (settings.pagesCount > 0) {
         settings.currentPage = 1;
         changePage();
-    };
-
-};
-
+    }
+}
 
 function moveToPreviousPage() {
-
     if (settings.currentPage > 1) {
         settings.currentPage -= 1;
         changePage();
-    };
-
-};
-
+    }
+}
 
 function moveToNextPage() {
-
     if (settings.currentPage < settings.pagesCount) {
         settings.currentPage += 1;
         changePage();
-    };
-
-};
-
+    }
+}
 
 function moveToLastPage() {
-
     if (settings.pagesCount > 0) {
         settings.currentPage = settings.pagesCount;
         changePage();
-    };
-
-};
+    }
+}
 
 
 export {
-    saveData, 
-    changePage, 
-    getActiveGroup, 
-    groupExists, 
-    getGroupIndex, 
-    toggleActiveGroup, 
-    getActiveTask, 
-    getTaskIndex, 
+    changePage,
+    getActiveGroup,
+    getActiveTask,
+    getGroupIndex,
+    getTaskIndex,
+    groupExists,
+    saveData,
+    toggleActiveGroup,
     updateTasksList
 };

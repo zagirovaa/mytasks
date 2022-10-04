@@ -5,6 +5,9 @@
 }
 
 html {
+    --border-color: rgb(240, 240, 240);
+    --shadow-color: rgba(32, 64, 80, 0.2);
+    
     scrollbar-width: none;
 }
 
@@ -33,4 +36,10 @@ nav.panel {
         justify-content: center;
         align-items: center;
     }
+}
+
+.modal-card {
+    border: 1px solid var(--border-color);
+    box-shadow: 0px 0px 15px 0px var(--shadow-color);
+    border-radius: 5px;
 }
