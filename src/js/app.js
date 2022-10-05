@@ -40,15 +40,15 @@ const modalMode = {
 getData();
 
 const groupsPanel = document.getElementById("groups-panel");
-// const tasksPanel = document.getElementById("tasks-panel");
-// groupsPanel.addEventListener("click", el => {
-//     el.stopPropagation();
-//     toggleGroupsPanel();
-// });
-// tasksPanel.addEventListener("click", el => {
-//     el.stopPropagation();
-//     toggleTasksPanel();
-// });
+const tasksPanel = document.getElementById("tasks-panel");
+groupsPanel.addEventListener("click", el => {
+    el.stopPropagation();
+    toggleGroupsPanel();
+});
+tasksPanel.addEventListener("click", el => {
+    el.stopPropagation();
+    toggleTasksPanel();
+});
 
 if (localDB.length > 0) {
     const groupsCount = document.getElementById("groups-count");

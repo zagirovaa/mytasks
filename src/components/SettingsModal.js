@@ -1,5 +1,5 @@
 import { saveData, changePage } from "../js/app.js";
-import MessageBox from "./MessageBox.js";
+import NotifyBox from "./NotifyBox.js";
 
 export default class SettingsModal {
 
@@ -17,7 +17,9 @@ export default class SettingsModal {
             changePage();
             this.close();
         } else {
-            MessageBox.show("Enter a value in the range from 1 to 50.");
+            NotifyBox.show(
+                "Enter a value in the range from 1 to 50.", "danger"
+            );
         }
     }
 

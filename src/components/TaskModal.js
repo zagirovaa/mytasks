@@ -5,7 +5,7 @@ import {
     getTaskIndex, 
     updateTasksList
 } from "../js/app.js";
-import MessageBox from "./MessageBox.js";
+import NotifyBox from "./NotifyBox.js";
 import Task from "../js/Task.js";
 
 export default class TaskModal {
@@ -56,7 +56,9 @@ export default class TaskModal {
             }
             this.close();
         } else {
-            MessageBox.show("You did not fill one of the required fields.");
+            NotifyBox.show(
+                "You did not fill one of the required fields.", "danger"
+            );
         }
     }
 

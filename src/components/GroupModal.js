@@ -11,7 +11,7 @@ import {
     toggleActiveGroup
 } from "../js/app.js";
 import Group from "../js/Group.js";
-import MessageBox from "./MessageBox.js";
+import NotifyBox from "./NotifyBox.js";
 
 export default class GroupModal {
 
@@ -33,8 +33,9 @@ export default class GroupModal {
         ).value.trim() || "";
         if (changedGroupName) {
             if (groupExists(changedGroupName)) {
-                MessageBox.show(
-                    "There is already a group with an identical name."
+                NotifyBox.show(
+                    "There is already a group with an identical name.",
+                    "warning"
                 );
             } else {
                 const groupsPanel = document.getElementById("groups-panel");
@@ -60,7 +61,7 @@ export default class GroupModal {
                 this.close();
             }
         } else {
-            MessageBox.show("You did not enter a group name.");
+           NotifyBox.show("You did not enter a group name.", "danger");
         }
     }
 
