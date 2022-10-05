@@ -1,8 +1,13 @@
 import {
-    saveData, 
-    groupExists, 
+    clearGroupsPanel,
+    drawActiveGroup,
     getActiveGroup,
-    getGroupIndex, 
+    getGroupIndex,
+    groupExists,
+    renderGroups,
+    saveData,
+    setGroupsEventListeners,
+    sortGroups,
     toggleActiveGroup
 } from "../js/app.js";
 import Group from "../js/Group.js";
@@ -20,6 +25,47 @@ export default class GroupModal {
         } else {
             this.#title = "Add group";
         };
+    }
+
+    apply(mode) {
+        const changedGroupName = document.getElementById(
+            "group-modal-input"
+        ).value.trim() || "";
+        if (changedGroupName) {
+            if (groupExists(changedGroupName)) {
+                MessageBox.show(
+                    "There is already a group with an identical name."
+                );
+            } else {
+                const groupsPanel = document.getElementById("groups-panel");
+                const groupsCount = document.getElementById("groups-count");
+                if (mode) {
+                    this.#local_db[
+                        getGroupIndex(getActiveGroup().uuid)
+                    ].name = changedGroupName;
+                } else {
+                    const newGroup = new Group(changedGroupName);
+                    if (this.#local_db.length === 0)  {
+                        newGroup.active = true;
+                    }
+                    this.#local_db.push(newGroup);
+                }
+                saveData();
+                sortGroups();
+                clearGroupsPanel();
+                groupsPanel.insertAdjacentHTML("beforeend", renderGroups());
+                drawActiveGroup(getActiveGroup().uuid);
+                groupsCount.textContent = this.#local_db.length;
+                setGroupsEventListeners();
+                this.close();
+            }
+        } else {
+            MessageBox.show("You did not enter a group name.");
+        }
+    }
+
+    close() {
+        document.getElementById("group-modal").remove();
     }
 
     show() {
@@ -45,83 +91,6 @@ export default class GroupModal {
             groupModalInput.value = activeGroup.name;
         };
         groupModalInput.focus();
-    }
-
-    apply(mode) {
-        const groupName = document.getElementById(
-            "group-modal-input"
-        ).value.trim() || "";
-        if (groupName) {
-            if (groupExists(groupName)) {
-                MessageBox.show(
-                    "There is already a group with an identical name."
-                );
-            } else {
-                if (mode) {
-                    const activeGroup = getActiveGroup();
-                    const groupModalInput = document.getElementById(
-                        "group-modal-input"
-                    );
-                    const activeGroupPanel = document.getElementById(
-                        activeGroup.uuid
-                    );
-                    const newGroupName = groupModalInput.value;
-                    activeGroupPanel.textContent = newGroupName;
-                    this.#local_db[
-                        getGroupIndex(activeGroup.uuid)
-                    ].name = newGroupName;
-                    saveData();
-                } else {
-                    const newGroup = new Group(groupName);
-                    const groupsPanel = document.getElementById("groups-panel");
-                    const groupsCount = document.getElementById("groups-count");
-                    if (this.#local_db.length === 0)  {
-                        newGroup.active = true;
-                    }
-                    this.#local_db.push(newGroup);
-                    saveData();
-                    groupsPanel.insertAdjacentHTML("beforeend", `
-                        ${this.#local_db.length === 1 ?
-                            `
-                                <a 
-                                    id="${newGroup.uuid}"
-                                    class="
-                                        panel-block
-                                        is-radiusless
-                                        has-background-info
-                                        has-text-white
-                                    ">
-                                    ${newGroup.name}
-                                </a>
-                            `
-                            :
-                            `
-                                <a
-                                    id="${newGroup.uuid}"
-                                    class="panel-block is-radiusless">
-                                    ${newGroup.name}
-                                </a>
-                            `
-                        }
-                    `);
-                    groupsCount.textContent = this.#local_db.length;
-                    document.getElementById(newGroup.uuid).addEventListener(
-                        "click",
-                        el => {
-                            el.stopPropagation();
-                            toggleActiveGroup(newGroup.uuid);
-                        }
-                    );
-                }
-                this.close();
-            }
-        } else {
-            MessageBox.show("You did not enter a group name.");
-        }
-    }
-
-    close() {
-        document.getElementById("group-modal").remove();
     }
 
     render() {

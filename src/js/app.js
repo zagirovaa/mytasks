@@ -40,38 +40,24 @@ const modalMode = {
 getData();
 
 const groupsPanel = document.getElementById("groups-panel");
-const tasksPanel = document.getElementById("tasks-panel");
-groupsPanel.addEventListener("click", el => {
-    el.stopPropagation();
-    toggleGroupsPanel();
-});
-tasksPanel.addEventListener("click", el => {
-    el.stopPropagation();
-    toggleTasksPanel();
-});
+// const tasksPanel = document.getElementById("tasks-panel");
+// groupsPanel.addEventListener("click", el => {
+//     el.stopPropagation();
+//     toggleGroupsPanel();
+// });
+// tasksPanel.addEventListener("click", el => {
+//     el.stopPropagation();
+//     toggleTasksPanel();
+// });
 
 if (localDB.length > 0) {
     const groupsCount = document.getElementById("groups-count");
     const activeGroup = getActiveGroup();
-    const renderGroups = localDB.reduce((result, current) => {
-        result += `
-            <a
-                id="${current.uuid}"
-                class="panel-block is-radiusless">
-                ${current.name}
-            </a>
-        `;
-        return result;
-    }, "");
-    groupsPanel.insertAdjacentHTML("beforeend", renderGroups);
+    sortGroups();
+    groupsPanel.insertAdjacentHTML("beforeend", renderGroups());
     drawActiveGroup(activeGroup.uuid);
     groupsCount.textContent = localDB.length;
-    localDB.forEach(group => {
-        document.getElementById(group.uuid).addEventListener("click", el => {
-            el.stopPropagation();
-            toggleActiveGroup(group.uuid);
-        });
-    });
+    setGroupsEventListeners()
     if (activeGroup.tasks.length > 0) {
         changePage();
     }
@@ -145,6 +131,42 @@ function getData() {
 function saveData() {
     localStorage.setItem("localDB", JSON.stringify(localDB));
     localStorage.setItem("tasksPerPage", JSON.stringify(settings.tasksPerPage));
+}
+
+function setGroupsEventListeners() {
+    localDB.forEach(group => {
+        document.getElementById(group.uuid).addEventListener("click", el => {
+            el.stopPropagation();
+            toggleActiveGroup(group.uuid);
+        });
+    });
+}
+
+function sortGroups() {
+    localDB = localDB.sort((a, b) => {
+        const firstElement = a.name.toLowerCase();
+        const secondElement = b.name.toLowerCase();
+        if (firstElement < secondElement) {
+            return -1;
+        } else if (firstElement > secondElement) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+}
+
+function renderGroups() {
+    return localDB.reduce((result, current) => {
+        result += `
+            <a
+                id="${current.uuid}"
+                class="panel-block is-radiusless">
+                ${current.name}
+            </a>
+        `;
+        return result;
+    }, "");
 }
 
 function groupExists(name) {
@@ -534,12 +556,17 @@ function moveToLastPage() {
 
 export {
     changePage,
+    clearGroupsPanel,
+    drawActiveGroup,
     getActiveGroup,
     getActiveTask,
     getGroupIndex,
     getTaskIndex,
     groupExists,
+    renderGroups,
     saveData,
+    setGroupsEventListeners,
+    sortGroups,
     toggleActiveGroup,
     updateTasksList
 };
