@@ -28,9 +28,8 @@ export default class GroupModal {
     }
 
     apply(mode) {
-        const changedGroupName = document.getElementById(
-            "group-modal-input"
-        ).value.trim() || "";
+        const groupNameElement = document.getElementById("group-modal-input");
+        const changedGroupName = groupNameElement.value.trim();
         if (changedGroupName) {
             if (groupExists(changedGroupName)) {
                 NotifyBox.show(
@@ -44,16 +43,14 @@ export default class GroupModal {
                     this.#local_db[
                         getGroupIndex(getActiveGroup().uuid)
                     ].name = changedGroupName;
-                    NotifyBox.show(
-                        "The group name was successfully modified.", "success"
-                    );
+                    NotifyBox.show("The group name has been modified.");
                 } else {
                     const newGroup = new Group(changedGroupName);
                     if (this.#local_db.length === 0)  {
                         newGroup.active = true;
                     }
                     this.#local_db.push(newGroup);
-                    NotifyBox.show("A new group has been added.", "success");
+                    NotifyBox.show("A new group has been added.");
                 }
                 saveData();
                 sortGroups();
@@ -65,7 +62,9 @@ export default class GroupModal {
                 this.close();
             }
         } else {
-           NotifyBox.show("Fill in the group name.", "danger");
+            groupNameElement.value = "";
+            groupNameElement.focus();
+            NotifyBox.show("Fill in the group name.", "danger");
         }
     }
 

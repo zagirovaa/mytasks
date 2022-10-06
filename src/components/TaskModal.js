@@ -22,12 +22,12 @@ export default class TaskModal {
     }
 
     apply(mode) {
-        const taskTitle = document.getElementById(
-            "task-modal-input"
-        ).value.trim() || "";
-        const taskMessage = document.getElementById(
+        const taskTitleElement = document.getElementById("task-modal-input");
+        const taskMessageElement = document.getElementById(
             "task-modal-textarea"
-        ).value.trim() || "";
+        );
+        const taskTitle = taskTitleElement.value.trim();
+        const taskMessage = taskMessageElement.value.trim();
         if (taskTitle && taskMessage) {
             if (mode) {
                 const activeTask = getActiveTask();
@@ -42,9 +42,7 @@ export default class TaskModal {
                 document.querySelector(
                     `#${activeTask.uuid} .content`
                 ).textContent = taskMessage;
-                NotifyBox.show(
-                    "The task was successfully modified.", "success"
-                );
+                NotifyBox.show("The task has been modified.");
             } else {
                 const newTask = new Task(taskTitle, taskMessage);
                 const tasksPanel = document.getElementById("tasks-panel");
@@ -56,10 +54,21 @@ export default class TaskModal {
                 activeGroup.tasks.push(newTask);
                 saveData();
                 updateTasksList();
-                NotifyBox.show("A new task has been added.", "success");
+                NotifyBox.show("A new task has been added.");
             }
             this.close();
         } else {
+            if (!taskTitle && taskMessage) {
+                taskTitleElement.value = "";
+                taskTitleElement.focus();
+            } else if (taskTitle && !taskMessage) {
+                taskMessageElement.value = "";
+                taskMessageElement.focus();
+            } else {
+                taskMessageElement.value = "";
+                taskTitleElement.value = "";
+                taskTitleElement.focus();
+            }
             NotifyBox.show("Fill in all the required fields.", "danger");
         }
     }

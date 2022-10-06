@@ -10,16 +10,17 @@ export default class SettingsModal {
     }
 
     apply() {
-        const number = document.getElementById("pages-number");
-        if (number.value > 0 && number.value < 51) {
-            this.#settings.tasksPerPage = Number(number.value);
+        const pagesNumber = document.getElementById("pages-number");
+        if (pagesNumber.value > 0 && pagesNumber.value < 51) {
+            this.#settings.tasksPerPage = Number(pagesNumber.value);
             saveData();
             changePage();
             this.close();
+            NotifyBox.show("Settings have been saved.");
         } else {
-            NotifyBox.show(
-                "Enter a value in the range from 1 to 50.", "danger"
-            );
+            pagesNumber.value = this.#settings.tasksPerPage;
+            pagesNumber.focus();
+            NotifyBox.show("Enter a value from 1 to 50.", "danger");
         }
     }
 

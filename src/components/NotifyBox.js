@@ -1,12 +1,12 @@
 export default class NotifyBox {
 
-    message; timout; type;
+    message; timout; timer; type;
 
     static close() {
         document.getElementById("notify-box").remove();
     }
 
-    static show(message, type) {
+    static show(message, type="success") {
         this.message = message;
         this.timeout = 2000;
         this.type = type;
@@ -14,9 +14,12 @@ export default class NotifyBox {
             "beforeend", this.render()
         );
         document.getElementById("notify-box-close").addEventListener(
-            "click", this.close
+            "click", () => {
+                clearTimeout(this.timer);
+                this.close();
+            }
         );
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
             this.close();
         }, this.timeout);
     }

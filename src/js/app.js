@@ -8,13 +8,13 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
         if(reg.installing) {
             console.log("Service worker installing.");
-            NotifyBox.show("Service worker installing.", "success");
+            NotifyBox.show("Service worker installing.");
         } else if (reg.waiting) {
             console.log("Service worker installed.");
-            NotifyBox("Service worker installed.", "success");
+            NotifyBox("Service worker installed.");
         } else if (reg.active) {
             console.log("Service worker active.");
-            NotifyBox.show("Service worker active.", "success");
+            NotifyBox.show("Service worker active.");
         }
     }).catch(function(error) {
         console.log(`Registration failed with ${error}.`);
@@ -369,11 +369,12 @@ function getCurrentPageTasks() {
         const pageTasks = activeGroup.tasks.slice(startItem, endItem);
         return pageTasks;
     }
+    return [];
 }
 
 function changePage() {
     const pageTasks = getCurrentPageTasks();
-    if (pageTasks) {
+    if (pageTasks.length > 0) {
         makeTaskActive(pageTasks[0].uuid);
         updateTasksList();
     }
@@ -463,6 +464,7 @@ function deleteGroup() {
         document.getElementById(activeGroupID).remove();
         groupCount.textContent = localDB.length;
         drawActiveGroup(getActiveGroup().uuid);
+        NotifyBox.show("The group has been deleted.");
     }
 }
 
@@ -478,6 +480,7 @@ function clearGroups() {
         pagination.textContent = `
             ${settings.currentPage} of ${settings.pagesCount}
         `;
+        NotifyBox.show("All groups have been deleted.")
     }
 }
 
@@ -511,6 +514,7 @@ function deleteTask() {
         document.getElementById(activeTaskID).remove();
         tasksCount.textContent = activeGroup.tasks.length;
         updateTasksList();
+        NotifyBox.show("The task has been deleted.");
     }
 }
 
@@ -526,6 +530,7 @@ function clearTasks() {
         pagination.textContent = `
             ${settings.currentPage} of ${settings.pagesCount}
         `;
+        NotifyBox.show("All tasks have been deleted.")
     }
 }
 
