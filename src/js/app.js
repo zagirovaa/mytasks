@@ -178,11 +178,6 @@ function renderGroups() {
     }, "");
 }
 
-function groupExists(name) {
-    return localDB.filter(group => group.name === name).length > 0 ?
-        true : false;
-}
-
 function getActiveGroup() {
     const activeGroup = localDB.filter(group => group.active);
     return activeGroup.length > 0 ? activeGroup[0] : false;
@@ -578,11 +573,9 @@ export {
     getActiveTask,
     getGroupIndex,
     getTaskIndex,
-    groupExists,
     renderGroups,
     saveData,
     setGroupsEventListeners,
     sortGroups,
-    toggleActiveGroup,
     updateTasksList
 };

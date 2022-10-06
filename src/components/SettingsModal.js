@@ -1,4 +1,4 @@
-import { saveData, changePage } from "../js/app.js";
+import { changePage, saveData } from "../js/app.js";
 import NotifyBox from "./NotifyBox.js";
 
 export default class SettingsModal {
@@ -67,9 +67,9 @@ export default class SettingsModal {
                                     id="pages-number"
                                     class="input"
                                     type="number"
-                                    min="1"
+                                    min="0"
                                     max="50"
-                                    step="1"
+                                    step="5"
                                     value="${this.#settings.tasksPerPage}">
                             </div>
                         </div>

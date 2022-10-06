@@ -3,12 +3,10 @@ import {
     drawActiveGroup,
     getActiveGroup,
     getGroupIndex,
-    groupExists,
     renderGroups,
     saveData,
     setGroupsEventListeners,
-    sortGroups,
-    toggleActiveGroup
+    sortGroups
 } from "../js/app.js";
 import Group from "../js/Group.js";
 import NotifyBox from "./NotifyBox.js";
@@ -70,6 +68,11 @@ export default class GroupModal {
 
     close() {
         document.getElementById("group-modal").remove();
+    }
+
+    groupExists(name) {
+        return localDB.filter(group => group.name === name).length > 0 ?
+            true : false;
     }
 
     show() {
