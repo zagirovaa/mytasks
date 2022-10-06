@@ -42,6 +42,9 @@ export default class TaskModal {
                 document.querySelector(
                     `#${activeTask.uuid} .content`
                 ).textContent = taskMessage;
+                NotifyBox.show(
+                    "The task was successfully modified.", "success"
+                );
             } else {
                 const newTask = new Task(taskTitle, taskMessage);
                 const tasksPanel = document.getElementById("tasks-panel");
@@ -53,12 +56,11 @@ export default class TaskModal {
                 activeGroup.tasks.push(newTask);
                 saveData();
                 updateTasksList();
+                NotifyBox.show("A new task has been added.", "success");
             }
             this.close();
         } else {
-            NotifyBox.show(
-                "You did not fill one of the required fields.", "danger"
-            );
+            NotifyBox.show("Fill in all the required fields.", "danger");
         }
     }
 

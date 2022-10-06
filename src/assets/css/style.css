@@ -47,6 +47,7 @@ nav.panel {
 }
 
 .notification {
+    box-shadow: 0px 0px 15px 0px var(--shadow-color);
     position: absolute !important;
     right: var(--notify-margin);
     top: var(--notify-margin);

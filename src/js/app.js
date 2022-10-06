@@ -1,19 +1,24 @@
 import AboutModal from "../components/AboutModal.js";
 import GroupModal from "../components/GroupModal.js";
+import NotifyBox from "../components/NotifyBox.js";
 import SettingsModal from "../components/SettingsModal.js";
 import TaskModal from "../components/TaskModal.js";
 
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
         if(reg.installing) {
-            console.log("Service worker installing");
+            console.log("Service worker installing.");
+            NotifyBox.show("Service worker installing.", "success");
         } else if (reg.waiting) {
-            console.log("Service worker installed");
+            console.log("Service worker installed.");
+            NotifyBox("Service worker installed.", "success");
         } else if (reg.active) {
-            console.log("Service worker active");
+            console.log("Service worker active.");
+            NotifyBox.show("Service worker active.", "success");
         }
     }).catch(function(error) {
-        console.log("Registration failed with " + error);
+        console.log(`Registration failed with ${error}.`);
+        NotifyBox.show(`Registration failed with ${error}.`, "danger");
     });
 }
 
@@ -129,8 +134,12 @@ function getData() {
 }
 
 function saveData() {
-    localStorage.setItem("localDB", JSON.stringify(localDB));
-    localStorage.setItem("tasksPerPage", JSON.stringify(settings.tasksPerPage));
+    localStorage.setItem(
+        "localDB", JSON.stringify(localDB)
+    );
+    localStorage.setItem(
+        "tasksPerPage", JSON.stringify(settings.tasksPerPage)
+    );
 }
 
 function setGroupsEventListeners() {
@@ -170,7 +179,8 @@ function renderGroups() {
 }
 
 function groupExists(name) {
-    return localDB.filter(group => group.name === name).length > 0 ? true : false;
+    return localDB.filter(group => group.name === name).length > 0 ?
+        true : false;
 }
 
 function getActiveGroup() {
@@ -352,7 +362,9 @@ function getCurrentPageTasks() {
             settings.currentPage = 1;
         }
         const startItem = 
-            settings.currentPage * settings.tasksPerPage - settings.tasksPerPage;
+            settings.currentPage *
+            settings.tasksPerPage -
+            settings.tasksPerPage;
         const endItem = startItem + settings.tasksPerPage;
         const pageTasks = activeGroup.tasks.slice(startItem, endItem);
         return pageTasks;
@@ -552,7 +564,6 @@ function moveToLastPage() {
         changePage();
     }
 }
-
 
 export {
     changePage,

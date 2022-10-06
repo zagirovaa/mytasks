@@ -34,7 +34,7 @@ export default class GroupModal {
         if (changedGroupName) {
             if (groupExists(changedGroupName)) {
                 NotifyBox.show(
-                    "There is already a group with an identical name.",
+                    "There is a group with the same name.",
                     "warning"
                 );
             } else {
@@ -44,12 +44,16 @@ export default class GroupModal {
                     this.#local_db[
                         getGroupIndex(getActiveGroup().uuid)
                     ].name = changedGroupName;
+                    NotifyBox.show(
+                        "The group name was successfully modified.", "success"
+                    );
                 } else {
                     const newGroup = new Group(changedGroupName);
                     if (this.#local_db.length === 0)  {
                         newGroup.active = true;
                     }
                     this.#local_db.push(newGroup);
+                    NotifyBox.show("A new group has been added.", "success");
                 }
                 saveData();
                 sortGroups();
@@ -61,7 +65,7 @@ export default class GroupModal {
                 this.close();
             }
         } else {
-           NotifyBox.show("You did not enter a group name.", "danger");
+           NotifyBox.show("Fill in the group name.", "danger");
         }
     }
 

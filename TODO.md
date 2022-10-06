@@ -6,6 +6,7 @@ Simple TODO web application
 
 ### Todo
 
+- [ ] Move from LiveServer to npm  
 
 ### In Progress
 
@@ -13,6 +14,7 @@ Simple TODO web application
 
 ### Done ✓
 
-- [x] Ascending sorting for group names  
+- [x] Add extra notifications  
+- [x] Fix groups and tasks panel folding  
 - [x] Switch from modal to notification  
-
+- [x] Ascending sorting for group names  
