@@ -1,4 +1,4 @@
-import { changePage, saveData } from "../../main.js";
+import { changePage, saveData } from "../main.js";
 import NotifyBox from "./NotifyBox.js";
 
 export default class SettingsModal {

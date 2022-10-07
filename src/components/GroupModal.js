@@ -8,7 +8,7 @@ import {
     saveData,
     setGroupsEventListeners,
     sortGroups
-} from "../../main.js";
+} from "../main.js";
 import Group from "../Group.js";
 import NotifyBox from "./NotifyBox.js";
 

@@ -1,16 +1,16 @@
 import "bulma";
 import "bulma-tooltip";
 
-import AboutModal from "./src/components/AboutModal.js";
-import Content from "./src/components/Content.js";
-import GroupModal from "./src/components/GroupModal.js";
-import Navbar from "./src/components/Navbar.js";
-import NotifyBox from "./src/components/NotifyBox.js";
-import SettingsModal from "./src/components/SettingsModal.js";
-import TaskModal from "./src/components/TaskModal.js";
+import AboutModal from "./components/AboutModal.js";
+import Content from "./components/Content.js";
+import GroupModal from "./components/GroupModal.js";
+import Navbar from "./components/Navbar.js";
+import NotifyBox from "./components/NotifyBox.js";
+import SettingsModal from "./components/SettingsModal.js";
+import TaskModal from "./components/TaskModal.js";
 
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
+    navigator.serviceWorker.register("./sw.js", { scope: "." }).then(reg => {
         if(reg.installing) {
             console.log("Service worker installing.");
             NotifyBox.show("Service worker installing.");

@@ -4,7 +4,7 @@ import {
     getActiveTask, 
     getTaskIndex, 
     updateTasksList
-} from "../../main.js";
+} from "../main.js";
 import NotifyBox from "./NotifyBox.js";
 import Task from "../Task.js";
 
