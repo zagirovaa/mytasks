@@ -4,9 +4,9 @@ import {
     getActiveTask, 
     getTaskIndex, 
     updateTasksList
-} from "../js/app.js";
+} from "../../main.js";
 import NotifyBox from "./NotifyBox.js";
-import Task from "../js/Task.js";
+import Task from "../Task.js";
 
 export default class TaskModal {
 

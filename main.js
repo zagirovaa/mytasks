@@ -1,8 +1,13 @@
-import AboutModal from "../components/AboutModal.js";
-import GroupModal from "../components/GroupModal.js";
-import NotifyBox from "../components/NotifyBox.js";
-import SettingsModal from "../components/SettingsModal.js";
-import TaskModal from "../components/TaskModal.js";
+import "bulma";
+import "bulma-tooltip";
+
+import AboutModal from "./src/components/AboutModal.js";
+import Content from "./src/components/Content.js";
+import GroupModal from "./src/components/GroupModal.js";
+import Navbar from "./src/components/Navbar.js";
+import NotifyBox from "./src/components/NotifyBox.js";
+import SettingsModal from "./src/components/SettingsModal.js";
+import TaskModal from "./src/components/TaskModal.js";
 
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("../sw.js", { scope: "." }).then(reg => {
@@ -33,7 +38,7 @@ const settings = {
 const helpContext = {
     "title": "About",
     "name": "MyTasks",
-    "version": "0.3.5",
+    "version": "0.5.5",
     "developer": "Zagirov Abdul Askerovich"
 };
 
@@ -43,6 +48,10 @@ const modalMode = {
 };
 
 getData();
+
+const app = document.getElementById("app");
+app.insertAdjacentHTML("beforeend", Navbar.render(helpContext.name));
+app.insertAdjacentHTML("beforeend", Content.render());
 
 const groupsPanel = document.getElementById("groups-panel");
 const tasksPanel = document.getElementById("tasks-panel");
@@ -71,7 +80,7 @@ if (localDB.length > 0) {
 document.addEventListener("DOMContentLoaded", () => {
     const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
     menuItems.forEach(el => {
-        const menuText = el.textContent;
+        const menuText = el.textContent.trim();
         switch (menuText) {
             case "Add new group":
                 el.addEventListener("click", addGroup);
@@ -103,16 +112,16 @@ document.addEventListener("DOMContentLoaded", () => {
             case "About":
                 el.addEventListener("click", showAbout);
                 break;
-            case "«":
+            case "first_page":
                 el.addEventListener("click", moveToFirstPage);
                 break;
-            case "‹":
+            case "navigate_before":
                 el.addEventListener("click", moveToPreviousPage);
                 break;
-            case "›":
+            case "navigate_next":
                 el.addEventListener("click", moveToNextPage);
                 break;
-            case "»":
+            case "last_page":
                 el.addEventListener("click", moveToLastPage);
                 break;
         }
@@ -149,6 +158,11 @@ function setGroupsEventListeners() {
             toggleActiveGroup(group.uuid);
         });
     });
+}
+
+function groupExists(name) {
+    return localDB.filter(group => group.name === name).length > 0 ?
+        true : false;
 }
 
 function sortGroups() {
@@ -573,6 +587,7 @@ export {
     getActiveTask,
     getGroupIndex,
     getTaskIndex,
+    groupExists,
     renderGroups,
     saveData,
     setGroupsEventListeners,

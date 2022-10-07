@@ -1,2 +1,2 @@
 # mytasks
-Simple TODO application
+Save your daily tasks devided by categories

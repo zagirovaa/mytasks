@@ -5,6 +5,7 @@
 }
 
 html {
+    --back-color: hsl(0, 0%, 96%);
     --border-color: rgb(240, 240, 240);
     --notify-width: 450px;
     --notify-margin: 10px;
@@ -53,4 +54,8 @@ nav.panel {
     top: var(--notify-margin);
     width: var(--notify-width);
     z-index: 100 !important;
+}
+
+.panel-block:hover .card-content {
+    background-color: var(--back-color);
 }
