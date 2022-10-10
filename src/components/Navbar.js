@@ -50,12 +50,12 @@ export default class Navbar {
                     <div class="navbar-end">
                         <a
                             class="navbar-item has-tooltip-left"
-                            data-tooltip="Первая страница">
+                            data-tooltip="First page">
                             <span class="material-icons">first_page</span>
                         </a>
                         <a
                             class="navbar-item has-tooltip-left"
-                            data-tooltip="Предыдущая страница">
+                            data-tooltip="Previous page">
                             <span class="material-icons">navigate_before</span>
                         </a>
                         <span
@@ -66,12 +66,12 @@ export default class Navbar {
                         </span>
                         <a
                             class="navbar-item has-tooltip-left"
-                            data-tooltip="Следующая страница">
+                            data-tooltip="Next page">
                             <span class="material-icons">navigate_next</span>
                         </a>
                         <a
                             class="navbar-item has-tooltip-left"
-                            data-tooltip="Последняя страница">
+                            data-tooltip="Last page">
                             <span class="material-icons">last_page</span>
                         </a>
                     </div>

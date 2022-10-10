@@ -13,6 +13,7 @@ Save your daily tasks devided by categories
 
 ### Done ✓
 
+- [x] Remove PWA settings  
 - [x] Move from LiveServer to npm  
 - [x] Code refactoring  
 - [x] Add extra notifications  

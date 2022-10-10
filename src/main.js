@@ -9,24 +9,6 @@ import NotifyBox from "./components/NotifyBox.js";
 import SettingsModal from "./components/SettingsModal.js";
 import TaskModal from "./components/TaskModal.js";
 
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js", { scope: "." }).then(reg => {
-        if(reg.installing) {
-            console.log("Service worker installing.");
-            NotifyBox.show("Service worker installing.");
-        } else if (reg.waiting) {
-            console.log("Service worker installed.");
-            NotifyBox("Service worker installed.");
-        } else if (reg.active) {
-            console.log("Service worker active.");
-            NotifyBox.show("Service worker active.");
-        }
-    }).catch(function(error) {
-        console.log(`Registration failed with ${error}.`);
-        NotifyBox.show(`Registration failed with ${error}.`, "danger");
-    });
-}
-
 let localDB = [];
 
 const settings = {
