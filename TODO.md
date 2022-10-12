@@ -9,10 +9,10 @@ Save your daily tasks devided by categories
 
 ### In Progress
 
-- [ ] Prepare for production  
 
 ### Done ✓
 
+- [x] Prepare for production  
 - [x] Remove PWA settings  
 - [x] Move from LiveServer to npm  
 - [x] Code refactoring  
