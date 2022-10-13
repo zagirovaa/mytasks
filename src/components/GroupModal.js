@@ -121,7 +121,7 @@ export default class GroupModal {
                     <footer class="modal-card-foot">
                         <button
                             id="group-modal-apply"
-                            class="button is-success">
+                            class="button is-link">
                             Apply
                         </button>
                         <button class="button group-modal-close">Cancel</button>
