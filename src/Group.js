@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import {v4 as uuidv4} from "uuid";
 
 export default class Group {
 
@@ -8,7 +8,7 @@ export default class Group {
         this.#active = false;
         this.#name = name;
         this.#tasks = [];
-        this.#uuid = "group-" + crypto.randomUUID();
+        this.#uuid = "group-" + uuidv4();
     };
 
     get active() {

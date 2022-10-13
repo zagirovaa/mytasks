@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import {v4 as uuidv4} from "uuid";
 
 export default class Task {
 
@@ -9,7 +9,7 @@ export default class Task {
         this.#created = new Date().toLocaleString();
         this.#message = message;
         this.#title = title;
-        this.#uuid = "task-" + crypto.randomUUID();
+        this.#uuid = "task-" + uuidv4();
     };
 
     get active() {
