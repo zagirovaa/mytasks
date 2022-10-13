@@ -18,10 +18,11 @@ const settings = {
 };
 
 const helpContext = {
-    "title": "About",
+    "developer": "Zagirov Abdul Askerovich",
     "name": "MyTasks",
-    "version": "0.5.5",
-    "developer": "Zagirov Abdul Askerovich"
+    "organization": "NETCON",
+    "title": "About",
+    "version": "0.5.5"
 };
 
 const modalMode = {
@@ -191,14 +192,14 @@ function getGroupIndex(uuid) {
 function drawActiveGroup(uuid) {
     const activeGroup = document.getElementById(uuid) || null;
     if (activeGroup) {
-        activeGroup.classList.add("has-background-info", "has-text-white");
+        activeGroup.classList.add("has-background-link", "has-text-white");
     }
 }
 
 function drawInActiveGroup() {
     const activeGroup = document.getElementById(getActiveGroup().uuid) || null;
     if (activeGroup) {
-        activeGroup.classList.remove("has-background-info", "has-text-white");
+        activeGroup.classList.remove("has-background-link", "has-text-white");
     }
 }
 
@@ -269,8 +270,8 @@ function drawActiveTask(uuid) {
     const taskTitle = document.querySelector(`#${uuid} .title`);
     const taskSubtitle = document.querySelector(`#${uuid} .subtitle`);
     const taskContent = document.querySelector(`#${uuid} .content`);
-    activeTask.classList.add("has-background-info");
-    cardContent.classList.add("has-background-info");
+    activeTask.classList.add("has-background-link");
+    cardContent.classList.add("has-background-link");
     taskTitle.classList.add("has-text-white");
     taskSubtitle.classList.add("has-text-white");
     taskContent.classList.add("has-text-white");
@@ -292,8 +293,8 @@ function drawInActiveTask() {
         const taskContent = document.querySelector(
             `#${activeTask.uuid} .content`
         );
-        activeTaskElement.classList.remove("has-background-info");
-        cardContent.classList.remove("has-background-info");
+        activeTaskElement.classList.remove("has-background-link");
+        cardContent.classList.remove("has-background-link");
         taskTitle.classList.remove("has-text-white");
         taskSubtitle.classList.remove("has-text-white");
         taskContent.classList.remove("has-text-white");

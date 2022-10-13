@@ -77,7 +77,7 @@ export default class SettingsModal {
                     <footer class="modal-card-foot">
                         <button
                             id="settings-modal-apply"
-                            class="button is-success">
+                            class="button is-link">
                             Apply
                         </button>
                         <button

@@ -142,7 +142,7 @@ export default class TaskModal {
                     <footer class="modal-card-foot">
                         <button
                             id="task-modal-apply"
-                            class="button is-success">
+                            class="button is-link">
                             Apply
                         </button>
                         <button class="button task-modal-close">Cancel</button>

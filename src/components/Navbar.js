@@ -2,7 +2,7 @@ export default class Navbar {
     static render(appName) {
         return `
             <nav
-                class="navbar is-fixed-top is-info"
+                class="navbar is-fixed-top is-link"
                 role="navigation"
                 aria-label="main navigation">
                 <div class="navbar-brand">
@@ -61,7 +61,7 @@ export default class Navbar {
                         <span
                             id="pagination"
                             class="navbar-item has-text-white
-                                has-background-info is-medium">
+                                has-background-link is-medium">
                             0 of 0
                         </span>
                         <a
