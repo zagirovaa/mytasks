@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export default class Group {
 
     #active; #name; #tasks; #uuid;

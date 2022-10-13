@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export default class Task {
 
     #active; #created; #message; #title; #uuid;
