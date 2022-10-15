@@ -6,6 +6,8 @@ Save your daily tasks devided by categories
 
 ### Todo
 
+- [ ] Make menu dissapear on menu item click  
+- [ ] In about modal change text from Russion into English  
 
 ### In Progress
 

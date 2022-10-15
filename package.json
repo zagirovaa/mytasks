@@ -3,9 +3,6 @@
     "description": "Save your daily tasks devided by categories",
     "version": "0.5.5",
     "type": "module",
-    "engines": {
-        "node": "16.x"
-    },
     "main": "server.js",
     "scripts": {
         "dev": "vite",

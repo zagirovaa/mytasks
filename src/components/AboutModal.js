@@ -60,7 +60,7 @@ export default class AboutModal {
                     <footer
                         class="modal-card-foot is-flex is-justify-content-center">
                         <h6 class="subtitle is-6">
-                            Все права защищены &copy;
+                            All rights reserved &copy;
                             ${this.#organization} ${this.current_year()}
                         </h6>
                     </footer>
