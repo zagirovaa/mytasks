@@ -61,6 +61,12 @@ if (localDB.length > 0) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const navbarBurger = document.querySelector(".navbar-burger");
+    navbarBurger.addEventListener("click", () => {
+        const target = document.getElementById(navbarBurger.dataset.target);
+        navbarBurger.classList.toggle("is-active");
+        target.classList.toggle("is-active");
+    });
     const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
     menuItems.forEach(el => {
         const menuText = el.textContent.trim();
@@ -108,12 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.addEventListener("click", moveToLastPage);
                 break;
         }
-    });
-    const navbarBurger = document.querySelector(".navbar-burger");
-    navbarBurger.addEventListener("click", () => {
-        const target = document.getElementById(navbarBurger.dataset.target);
-        navbarBurger.classList.toggle("is-active");
-        target.classList.toggle("is-active");
     });
 });
 
@@ -429,17 +429,24 @@ function updateTasksList() {
     }
 }
 
+function toggleNavbarBurger() {
+    document.querySelector(".navbar-burger").click();
+}
+
 function addGroup() {
+    toggleNavbarBurger();
     new GroupModal(modalMode.add, localDB).show();
 }
 
 function editGroup() {
+    toggleNavbarBurger();
     if (getActiveGroup()) {
         new GroupModal(modalMode.edit, localDB).show();
     }
 }
 
 function deleteGroup() {
+    toggleNavbarBurger();
     if (getActiveGroup()) {
         const activeGroupID = getActiveGroup().uuid;
         const currentActiveIndex = getGroupIndex(activeGroupID);
@@ -461,6 +468,7 @@ function deleteGroup() {
 }
 
 function clearGroups() {
+    toggleNavbarBurger();
     if (localDB.length > 0) {
         const pagination = document.getElementById("pagination");
         localStorage.clear();
@@ -477,18 +485,21 @@ function clearGroups() {
 }
 
 function addTask() {
+    toggleNavbarBurger();
     if (getActiveGroup()) {
         new TaskModal(modalMode.add).show();
     }
 }
 
 function editTask() {
+    toggleNavbarBurger();
     if (getActiveTask()) {
         new TaskModal(modalMode.edit).show();
     }
 }
 
 function deleteTask() {
+    toggleNavbarBurger();
     const activeGroup = getActiveGroup();
     if (activeGroup && activeGroup.tasks.length > 0) {
         const activeTaskID = getActiveTask().uuid;
@@ -511,6 +522,7 @@ function deleteTask() {
 }
 
 function clearTasks() {
+    toggleNavbarBurger();
     const activeGroup = getActiveGroup();
     if (activeGroup && activeGroup.tasks.length > 0) {
         const pagination = document.getElementById("pagination");
@@ -527,14 +539,17 @@ function clearTasks() {
 }
 
 function showSettings() {
+    toggleNavbarBurger();
     new SettingsModal(settings).show();
 }
 
 function showAbout() {
+    toggleNavbarBurger();
     new AboutModal(helpContext).show();
 }
 
 function moveToFirstPage() {
+    toggleNavbarBurger();
     if (settings.pagesCount > 0) {
         settings.currentPage = 1;
         changePage();
@@ -542,6 +557,7 @@ function moveToFirstPage() {
 }
 
 function moveToPreviousPage() {
+    toggleNavbarBurger();
     if (settings.currentPage > 1) {
         settings.currentPage -= 1;
         changePage();
@@ -549,6 +565,7 @@ function moveToPreviousPage() {
 }
 
 function moveToNextPage() {
+    toggleNavbarBurger();
     if (settings.currentPage < settings.pagesCount) {
         settings.currentPage += 1;
         changePage();
@@ -556,6 +573,7 @@ function moveToNextPage() {
 }
 
 function moveToLastPage() {
+    toggleNavbarBurger();
     if (settings.pagesCount > 0) {
         settings.currentPage = settings.pagesCount;
         changePage();

@@ -6,14 +6,14 @@ Save your daily tasks devided by categories
 
 ### Todo
 
-- [ ] Make menu dissapear on menu item click  
-- [ ] In about modal change text from Russion into English  
 
 ### In Progress
 
 
 ### Done ✓
 
+- [x] Make menu dissapear on menu item click  
+- [x] In about modal change text from Russion into English  
 - [x] Prepare for production  
 - [x] Remove PWA settings  
 - [x] Move from LiveServer to npm  
