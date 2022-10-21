@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "rm -r ./dist && vite build",
         "preview": "vite preview",
         "start": "node index.js"
     },
