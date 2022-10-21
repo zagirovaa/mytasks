@@ -2,13 +2,12 @@
     "name": "mytasks",
     "description": "Save your daily tasks devided by categories",
     "version": "0.5.5",
-    "type": "module",
-    "main": "server.js",
+    "main": "index.js",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "start": "node server.js"
+        "start": "node index.js"
     },
     "devDependencies": {
         "sass": "^1.55.0",

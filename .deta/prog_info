@@ -1,0 +1,1 @@
+{"id":"9ebc0a71-a461-415c-a9b0-e88cbc870017","space":35733,"runtime":"nodejs14.x","name":"mytasks","path":"vsj465","project":"a0o9kr7x","account":"144798365827","region":"eu-central-1","deps":["bulma@^0.9.4","bulma-tooltip@^3.0.2","express@^4.18.2","uuid@^9.0.0"],"envs":null,"public":false,"log_level":"debug","cron":""}
