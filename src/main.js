@@ -30,11 +30,6 @@ const modalMode = {
     "edit": 1
 };
 
-const htmlSymbols = {
-    "up": "⮝",
-    "down": "⮟"
-}
-
 getData();
 
 const app = document.getElementById("app");
@@ -42,25 +37,25 @@ app.insertAdjacentHTML("beforeend", Navbar.render(helpContext.name));
 app.insertAdjacentHTML("beforeend", Content.render());
 
 const groupsPanel = document.getElementById("groups-panel");
-const groupsTick = document.querySelector("#groups-panel .tick");
+const groupsArrow = document.querySelector("#groups-panel .arrow");
 const tasksPanel = document.getElementById("tasks-panel");
-const tasksTick = document.querySelector("#tasks-panel .tick");
+const tasksArrow = document.querySelector("#tasks-panel .arrow");
 groupsPanel.addEventListener("click", el => {
     el.stopPropagation();
     toggleGroupsPanel();
-    if (groupsTick.textContent.trim() === htmlSymbols.up) {
-        groupsTick.textContent = htmlSymbols.down;
+    if (groupsArrow.textContent.trim() === "expand_less") {
+        groupsArrow.textContent = "expand_more";
     } else {
-        groupsTick.textContent = htmlSymbols.up;
+        groupsArrow.textContent = "expand_less";
     }
 });
 tasksPanel.addEventListener("click", el => {
     el.stopPropagation();
     toggleTasksPanel();
-    if (tasksTick.textContent.trim() === htmlSymbols.up) {
-        tasksTick.textContent = htmlSymbols.down;
+    if (tasksArrow.textContent.trim() === "expand_less") {
+        tasksArrow.textContent = "expand_more";
     } else {
-        tasksTick.textContent = htmlSymbols.up;
+        tasksArrow.textContent = "expand_less";
     }
 });
 
