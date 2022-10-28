@@ -7,7 +7,7 @@
 html {
     --back-color: hsl(0, 0%, 96%);
     --border-color: rgb(240, 240, 240);
-    --notify-width: 450px;
+    --notify-width: 340px;
     --notify-margin: 10px;
     --shadow-color: rgba(32, 64, 80, 0.2);
     --text-color: hsl(217, 71%, 53%);
@@ -64,7 +64,7 @@ nav.panel .panel-heading:hover span:not(:last-child){
     position: absolute !important;
     right: var(--notify-margin);
     top: var(--notify-margin);
-    width: 100% - var(--notify-margin);
+    width: 100%;
     z-index: 100 !important;
 }
 
