@@ -74,12 +74,19 @@ if (localDB.length > 0) {
 
 document.addEventListener("DOMContentLoaded", () => {
     const navbarBurger = document.querySelector(".navbar-burger");
+    const settingsMenuItem = document.getElementById("settings-button");
+    const aboutMenuItem = document.getElementById("about-button");
+    const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
+
     navbarBurger.addEventListener("click", () => {
         const target = document.getElementById(navbarBurger.dataset.target);
         navbarBurger.classList.toggle("is-active");
         target.classList.toggle("is-active");
     });
-    const menuItems = Array.from(document.querySelectorAll("a.navbar-item"));
+    
+    settingsMenuItem.addEventListener("click", showSettings);
+    aboutMenuItem.addEventListener("click", showAbout);
+
     menuItems.forEach(el => {
         const menuText = el.textContent.trim();
         switch (menuText) {
@@ -106,12 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case "Clear all tasks":
                 el.addEventListener("click", clearTasks);
-                break;
-            case "Settings":
-                el.addEventListener("click", showSettings);
-                break;
-            case "About":
-                el.addEventListener("click", showAbout);
                 break;
             case "first_page":
                 el.addEventListener("click", moveToFirstPage);

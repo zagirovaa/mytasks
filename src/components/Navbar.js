@@ -7,6 +7,9 @@ export default class Navbar {
                 aria-label="main navigation">
                 <div class="navbar-brand">
                     <a class="navbar-item">
+                        <span class="material-icons mr-3 md-36">
+                            add_task
+                        </span>
                         <h4 class="has-text-weight-bold is-size-4">
                             ${appName}
                         </h4>
@@ -25,7 +28,12 @@ export default class Navbar {
                 <div id="navbarMain" class="navbar-menu">
                     <div class="navbar-start">
                         <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">Group</a>
+                            <a class="navbar-link">
+                                <span class="material-icons mr-2">
+                                    view_agenda
+                                </span>
+                                <span>Group</span>
+                            </a>
                             <div class="navbar-dropdown">
                                 <a class="navbar-item">Add new group</a>
                                 <a class="navbar-item">Edit current group</a>
@@ -35,7 +43,12 @@ export default class Navbar {
                             </div>
                         </div>
                         <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">Task</a>
+                            <a class="navbar-link">
+                                <span class="material-icons mr-2">
+                                    task
+                                </span>
+                                <span>Task</span>
+                            </a>
                             <div class="navbar-dropdown">
                                 <a class="navbar-item">Add new task</a>
                                 <a class="navbar-item">Edit current task</a>
@@ -44,8 +57,22 @@ export default class Navbar {
                                 <a class="navbar-item">Clear all tasks</a>
                             </div>
                         </div>
-                        <a class="navbar-item" id="settings-button">Settings</a>
-                        <a class="navbar-item" id="about-button">About</a>
+                        <a
+                            class="navbar-item navbar-item-one"
+                            id="settings-button">
+                            <span class="material-icons mr-2">
+                                settings
+                            </span>
+                            <span>Settings</span>
+                        </a>
+                        <a
+                            class="navbar-item navbar-item-one"
+                            id="about-button">
+                            <span class="material-icons mr-2">
+                                help
+                            </span>
+                            <span>About</span>
+                        </a>
                     </div>
                     <div class="navbar-end">
                         <a

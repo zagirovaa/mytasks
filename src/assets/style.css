@@ -28,7 +28,7 @@ nav.panel {
     cursor: pointer;
 }
 
-nav.panel:hover span:not(:last-child){
+nav.panel .panel-heading:hover span:not(:last-child){
     color: var(--text-color);
 }
 
@@ -39,6 +39,12 @@ nav.panel:hover span:not(:last-child){
 }
 
 @media only screen and (max-width: 1023px) {
+    .navbar-start .navbar-link,
+    .navbar-start  .navbar-item-one {
+        align-items: center;
+        display: flex;
+    }
+
     .navbar-end {
         align-items: center;
         display: flex;
