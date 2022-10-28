@@ -37,14 +37,26 @@ app.insertAdjacentHTML("beforeend", Navbar.render(helpContext.name));
 app.insertAdjacentHTML("beforeend", Content.render());
 
 const groupsPanel = document.getElementById("groups-panel");
+const groupsTick = document.querySelector("#groups-panel .tick");
 const tasksPanel = document.getElementById("tasks-panel");
+const tasksTick = document.querySelector("#tasks-panel .tick");
 groupsPanel.addEventListener("click", el => {
     el.stopPropagation();
     toggleGroupsPanel();
+    if (groupsTick.textContent.trim() === "⮝") {
+        groupsTick.textContent = "⮟";
+    } else {
+        groupsTick.textContent = "⮝";
+    }
 });
 tasksPanel.addEventListener("click", el => {
     el.stopPropagation();
     toggleTasksPanel();
+    if (tasksTick.textContent.trim() === "⮝") {
+        tasksTick.textContent = "⮟";
+    } else {
+        tasksTick.textContent = "⮝";
+    }
 });
 
 if (localDB.length > 0) {

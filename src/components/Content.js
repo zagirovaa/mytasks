@@ -7,7 +7,8 @@ export default class Content {
                         is-4-desktop is-3-widescreen">
                     <nav id="groups-panel" class="panel is-shadowless">
                         <p class="panel-heading is-radiusless">
-                            Groups
+                            <span>Groups</span>
+                            <span class="tick ml-2 md-16">⮝</span>
                             <span
                                 id="groups-count"
                                 class="tag is-dark is-pulled-right">
@@ -19,7 +20,8 @@ export default class Content {
                 <div class="column">
                     <nav id="tasks-panel" class="panel is-shadowless">
                         <p class="panel-heading is-radiusless">
-                            Tasks
+                            <span>Tasks</span>
+                            <span class="tick ml-2 md-16">⮝</span>
                             <span
                                 id="tasks-count"
                                 class="tag is-dark is-pulled-right">
@@ -32,3 +34,5 @@ export default class Content {
         `;
     }
 }
+// ⮝⮟
+// <span class="ml-2">⮝</span>

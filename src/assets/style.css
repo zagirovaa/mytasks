@@ -10,6 +10,7 @@ html {
     --notify-width: 450px;
     --notify-margin: 10px;
     --shadow-color: rgba(32, 64, 80, 0.2);
+    --text-color: hsl(217, 71%, 53%);
     
     scrollbar-width: none;
 }
@@ -25,6 +26,10 @@ body::-webkit-scrollbar {
 
 nav.panel {
     cursor: pointer;
+}
+
+nav.panel:hover span:not(:last-child){
+    color: var(--text-color);
 }
 
 @media only screen and (min-width: 768px) {
@@ -60,3 +65,9 @@ nav.panel {
 .panel-block:hover .card-content {
     background-color: var(--back-color);
 }
+
+.md-16 { font-size: 16px; }
+.md-18 { font-size: 18px; }
+.md-24 { font-size: 24px; }
+.md-36 { font-size: 36px; }
+.md-48 { font-size: 48px; }
