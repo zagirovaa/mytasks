@@ -30,6 +30,11 @@ const modalMode = {
     "edit": 1
 };
 
+const htmlSymbols = {
+    "up": "⮝",
+    "down": "⮟"
+}
+
 getData();
 
 const app = document.getElementById("app");
@@ -43,19 +48,19 @@ const tasksTick = document.querySelector("#tasks-panel .tick");
 groupsPanel.addEventListener("click", el => {
     el.stopPropagation();
     toggleGroupsPanel();
-    if (groupsTick.textContent.trim() === "⮝") {
-        groupsTick.textContent = "⮟";
+    if (groupsTick.textContent.trim() === htmlSymbols.up) {
+        groupsTick.textContent = htmlSymbols.down;
     } else {
-        groupsTick.textContent = "⮝";
+        groupsTick.textContent = htmlSymbols.up;
     }
 });
 tasksPanel.addEventListener("click", el => {
     el.stopPropagation();
     toggleTasksPanel();
-    if (tasksTick.textContent.trim() === "⮝") {
-        tasksTick.textContent = "⮟";
+    if (tasksTick.textContent.trim() === htmlSymbols.up) {
+        tasksTick.textContent = htmlSymbols.down;
     } else {
-        tasksTick.textContent = "⮝";
+        tasksTick.textContent = htmlSymbols.up;
     }
 });
 
@@ -133,18 +138,12 @@ document.addEventListener("DOMContentLoaded", () => {
 function getData() {
     localDB = JSON.parse(localStorage.getItem("localDB")) || [];
     const tasksPerPage = JSON.parse(localStorage.getItem("tasksPerPage")) || 0;
-    if (tasksPerPage > 0) {
-        settings.tasksPerPage = tasksPerPage;
-    }
+    if (tasksPerPage > 0) settings.tasksPerPage = tasksPerPage;
 }
 
 function saveData() {
-    localStorage.setItem(
-        "localDB", JSON.stringify(localDB)
-    );
-    localStorage.setItem(
-        "tasksPerPage", JSON.stringify(settings.tasksPerPage)
-    );
+    localStorage.setItem("localDB", JSON.stringify(localDB));
+    localStorage.setItem("tasksPerPage", JSON.stringify(settings.tasksPerPage));
 }
 
 function setGroupsEventListeners() {
@@ -157,8 +156,8 @@ function setGroupsEventListeners() {
 }
 
 function groupExists(name) {
-    return localDB.filter(group => group.name === name).length > 0 ?
-        true : false;
+    const groups = localDB.filter(group => group.name === name);
+    return groups.length > 0 ? true : false;
 }
 
 function sortGroups() {
