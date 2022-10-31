@@ -36,10 +36,16 @@ export default class Navbar {
                             </a>
                             <div class="navbar-dropdown">
                                 <a class="navbar-item">Add new group</a>
-                                <a class="navbar-item">Edit current group</a>
-                                <a class="navbar-item">Delete current group</a>
+                                <a class="navbar-item is-disable">
+                                    Edit current group
+                                </a>
+                                <a class="navbar-item is-disable">
+                                    Delete current group
+                                </a>
                                 <hr class="navbar-divider">
-                                <a class="navbar-item">Clear all groups</a>
+                                <a class="navbar-item is-disable">
+                                    Clear all groups
+                                </a>
                             </div>
                         </div>
                         <div class="navbar-item has-dropdown is-hoverable">
@@ -50,11 +56,19 @@ export default class Navbar {
                                 <span>Task</span>
                             </a>
                             <div class="navbar-dropdown">
-                                <a class="navbar-item">Add new task</a>
-                                <a class="navbar-item">Edit current task</a>
-                                <a class="navbar-item">Delete current task</a>
+                                <a class="navbar-item is-disable">
+                                    Add new task
+                                </a>
+                                <a class="navbar-item is-disable">
+                                    Edit current task
+                                </a>
+                                <a class="navbar-item is-disable">
+                                    Delete current task
+                                </a>
                                 <hr class="navbar-divider">
-                                <a class="navbar-item">Clear all tasks</a>
+                                <a class="navbar-item is-disable">
+                                    Clear all tasks
+                                </a>
                             </div>
                         </div>
                         <a
@@ -76,28 +90,28 @@ export default class Navbar {
                     </div>
                     <div class="navbar-end">
                         <a
-                            class="navbar-item has-tooltip-left"
+                            class="navbar-item has-tooltip-left is-disable"
                             data-tooltip="First page">
                             <span class="material-icons">first_page</span>
                         </a>
                         <a
-                            class="navbar-item has-tooltip-left"
+                            class="navbar-item has-tooltip-left is-disable"
                             data-tooltip="Previous page">
                             <span class="material-icons">navigate_before</span>
                         </a>
                         <span
                             id="pagination"
                             class="navbar-item has-text-white
-                                has-background-link is-medium">
+                                has-background-link is-medium is-disable">
                             0 of 0
                         </span>
                         <a
-                            class="navbar-item has-tooltip-left"
+                            class="navbar-item has-tooltip-left is-disable"
                             data-tooltip="Next page">
                             <span class="material-icons">navigate_next</span>
                         </a>
                         <a
-                            class="navbar-item has-tooltip-left"
+                            class="navbar-item has-tooltip-left is-disable"
                             data-tooltip="Last page">
                             <span class="material-icons">last_page</span>
                         </a>

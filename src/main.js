@@ -70,6 +70,7 @@ if (localDB.length > 0) {
     if (activeGroup.tasks.length > 0) {
         changePage();
     }
+    toggleNavBarItemsState();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -470,6 +471,7 @@ function deleteGroup() {
         document.getElementById(activeGroupID).remove();
         groupCount.textContent = localDB.length;
         drawActiveGroup(getActiveGroup().uuid);
+        toggleNavBarItemsState();
         NotifyBox.show("The group has been deleted.");
     }
 }
@@ -487,6 +489,7 @@ function clearGroups() {
         pagination.textContent = `
             ${settings.currentPage} of ${settings.pagesCount}
         `;
+        toggleNavBarItemsState();
         NotifyBox.show("All groups have been deleted.")
     }
 }
@@ -587,6 +590,23 @@ function moveToLastPage() {
     }
 }
 
+function toggleNavBarItemsState() {
+    const startItems = document.querySelectorAll(
+        ".navbar-start .navbar-dropdown .navbar-item"
+    );
+    const endItems = document.querySelectorAll(".navbar-end .navbar-item");
+    const items = [...startItems, ...endItems]; 
+    items.forEach(item => {
+        if (item.textContent.trim() !== "Add new group") {
+            if (item.classList.contains("is-disable")) {
+                item.classList.remove("is-disable");
+            } else {
+                item.classList.add("is-disable");
+            }
+        }
+    });
+}
+
 export {
     changePage,
     clearGroupsPanel,
@@ -600,5 +620,6 @@ export {
     saveData,
     setGroupsEventListeners,
     sortGroups,
+    toggleNavBarItemsState,
     updateTasksList
 };

@@ -7,7 +7,8 @@ import {
     renderGroups,
     saveData,
     setGroupsEventListeners,
-    sortGroups
+    sortGroups,
+    toggleNavBarItemsState
 } from "../main.js";
 import Group from "../Group.js";
 import NotifyBox from "./NotifyBox.js";
@@ -58,6 +59,7 @@ export default class GroupModal {
                 drawActiveGroup(getActiveGroup().uuid);
                 groupsCount.textContent = this.#local_db.length;
                 setGroupsEventListeners();
+                toggleNavBarItemsState();
                 this.close();
             }
         } else {
