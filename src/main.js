@@ -465,13 +465,14 @@ function deleteGroup() {
             } else {
                 toggleActiveGroup(localDB[currentActiveIndex + 1].uuid);
             }
+        } else {
+            toggleNavBarItemsState();
         }
         localDB.splice(currentActiveIndex, 1);
         saveData();
         document.getElementById(activeGroupID).remove();
         groupCount.textContent = localDB.length;
         drawActiveGroup(getActiveGroup().uuid);
-        toggleNavBarItemsState();
         NotifyBox.show("The group has been deleted.");
     }
 }

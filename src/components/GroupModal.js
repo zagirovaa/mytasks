@@ -48,6 +48,7 @@ export default class GroupModal {
                     const newGroup = new Group(changedGroupName);
                     if (this.#local_db.length === 0)  {
                         newGroup.active = true;
+                        toggleNavBarItemsState();
                     }
                     this.#local_db.push(newGroup);
                     NotifyBox.show("A new group has been added.");
@@ -59,7 +60,6 @@ export default class GroupModal {
                 drawActiveGroup(getActiveGroup().uuid);
                 groupsCount.textContent = this.#local_db.length;
                 setGroupsEventListeners();
-                toggleNavBarItemsState();
                 this.close();
             }
         } else {
